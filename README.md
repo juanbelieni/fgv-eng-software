@@ -10,11 +10,11 @@
 
 1. Atualização do Perfil do Usuário
   - Atores: usuário registrado e sistema.
-  - Descrição: o usuário deseja poder atualizar as informações do seu perfil no aplicativo de compartilhamento de progresso de leituras.
+  - Descrição: o usuário deseja poder atualizar as informações do seu perfil.
   - Fluxo Principal:
     1. O usuário faz login na sua conta.
     2. O usuário navega até a seção de "Perfil" do aplicativo.
-    3. O usuário pode editar informações como nome, foto de perfil, gênero, data de nascimento e outras informações pessoais.
+    3. O usuário pode editar informações como nome, foto de perfil e outras informações relevantes.
     4. O usuário salva as alterações no seu perfil.
 2. Recuperação de Senha
   - Atores: usuário registrado e sistema.
