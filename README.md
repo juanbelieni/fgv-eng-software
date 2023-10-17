@@ -63,6 +63,28 @@ Imaginemos o sistema como uma biblioteca univercitária que tenha salas de estud
     4. seleciona o livro desejado, com opção de livro completo, adiciona a data limite e informa que a meta é publica e a nomeia
     5. o sistema recebe as informações acima e cria a meta com o usuario como editor e coloca ela na lista de metas publicas para ser visualisada por todos que assim quiserem.
 
+### Progresso de leitura
+
+1. Atualizar o progresso:
+   - Ator Principal: Usuário e sistema
+   - Descrição: O usuário deseja atualizar o progresso de leitura de um livro no sistema de leituras.
+   - Fluxo Principal:
+     - O usuário faz login na sua conta
+     - O usuário navega até a lista de livros atualmente em leitura
+     - O usuário seleciona o livro que deseja atualizar
+     - O usuário insere o progresso da leitura (número de páginas lidas).
+     - O sistema registra a atualização do progresso no banco de dados do usuário e atualiza o status do livro.
+
+2. Acompanhar progressos de leitura em metas de leitura compartilhadas
+   - Atores: Usuário e sistema
+   - Descrição: Acompanhar os progressos de leitura de outros usuários que participam de uma meta de leitura compartilhada com o usuário em um livro específico.
+   - Fluxo Principal:
+     - O usuário faz login na sua conta
+     - O usuário acessa a página da meta de leitura conjunta
+     - O sistema exibe a lista de membros que estão participando da meta de leitura conjunta no livro específico
+     - O usuário pode ver o progresso de leitura de cada membro do grupo para o livro em questão, incluindo o número de páginas lidas ou a porcentagem concluída
+     - O usuário pode acompanhar o progresso dos outros membros do grupo e interagir, como comentar ou encorajar outros membros a atingir a meta
+
 ## Estórias de usuário
 
 ### Autenticação, conta e perfil
@@ -98,3 +120,16 @@ Imaginemos o sistema como uma biblioteca univercitária que tenha salas de estud
     - Quero que seja possivel visualizar quantas pessoas estão escritas na meta sem que eu precise efetivamente entrar na meta
     - Quero desistir da meta se a narrativa do livro for ruim
 
+### Progresso de leitura
+1. Visualizar o progresso de outro usuário:
+   - Descrição: como um usuário do sistema, quero poder ver o progresso dos meus amigos para ver o que estão lendo.
+   - Critérios de aceitação:
+     - Quero encontrar o nome de usuário do meu amigo na busca
+     - Quero poder acessar o perfil do meu no sistema depois de encontrá-lo na busca
+     - Quero poder visualizar os progressos de leitura do meu amigo no seu perfil
+
+2. Marcar o progresso como concuído
+   - Descrição: como um usuário do sistema, quando eu terminar um livro quero simplismente deixá-lo concluído, sem precisar atualizar o progresso.
+   - Critério de aceitação:
+     - Quero poder selecionar o livro no meu perfil o qual desejo atualizar meu progresso
+     - Quero poder atualizar o progresso para total e marcar o livro como concluído para que conste no meu perfil que eu terminei ele
