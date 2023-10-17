@@ -42,6 +42,31 @@ Imaginemos o sistema como uma biblioteca univercitária que tenha salas de estud
     6. O sistema permite que o usuário defina uma nova senha.
     7. O sistema confirma a alteração da senha e redireciona o usuário para a tela de login, onde ele pode acessar sua conta com a nova senha.
 
+### Metas de leitura individuais
+
+1. Atualizar meta de leitura existente.
+  - **Atores:** usuário e sistema.
+  - **Descrição:** o usuário deseja alterar dados de uma meta de leitura individual já criada.
+  - **Fluxo principal:**
+    1. O usuário faz login na sua conta.
+    2. O usuário acessa a seção "Metas de leitura".
+    3. O sistema apresenta o histórico de metas de leitura em andamento ou concluídas do usuário que não foram 
+    4. O usuário encontra a meta de leitura que deseja modificar e a seleciona.
+    5. O sistema exibe detalhes da meta de leitura selecionada, incluindo os prazos (datas) e os livros e páginas associadas a esses prazos.
+    6. O usuário seleciona o botão "Editar".
+    7. O sistema exibe uma tela semelhante a de criação de meta de leitura, mas com os dados já preenchidos conforme a meta sendo editada.
+    8. O usuário seleciona e altera os dados que desejar, clicando em "Salvar" ao fim do processo.
+    9. O sistema exibe uma mensagem indicando que os dados foram alterados com sucesso e retorna à página de metas de leitura.
+
+2. Lembrar o usuário de metas de leitura.
+  - **Atores:** sistema.
+  - **Descrição:** O sistema exibe na tela inicial lembretes de metas de leitura não concluídas que não tiveram nenhum progresso registrado nos últimos dias.
+  - **Fluxo principal:**
+    1. Às 00h de cada dia, o sistema identifica dentre as metas de leitura não concluídas do usuário se a data da última atualização de progresso ultrapassa uma semana (7 dias).
+    2. Caso alguma meta seja identificada, ela será exibida na tela inicial do usuário, junto com uma mensagem avisando o tempo que a meta está sem progresso registrado.
+    3. Se existir mais de uma meta inativa, o sistema irá exibir todas elas na página inicial do usuário, em ordem de prioridade (isto é, no topo aparecerão as metas com prazo mais próximo).
+    4. Caso alguma não receba atualização por mais de um mês e seu prazo termine, o sistema deverá exibí-la com prioridade, junto com um aviso informando sobre a possibilidade de editá-la ou excluí-la.
+
 ### Metas de leitura - estendido para multiplas pessoas.
 
 1. Entrar em uma meta existente:
@@ -69,21 +94,45 @@ Imaginemos o sistema como uma biblioteca univercitária que tenha salas de estud
    - Ator Principal: Usuário e sistema
    - Descrição: O usuário deseja atualizar o progresso de leitura de um livro no sistema de leituras.
    - Fluxo Principal:
-     - O usuário faz login na sua conta
-     - O usuário navega até a lista de livros atualmente em leitura
-     - O usuário seleciona o livro que deseja atualizar
-     - O usuário insere o progresso da leitura (número de páginas lidas).
-     - O sistema registra a atualização do progresso no banco de dados do usuário e atualiza o status do livro.
+    1. O usuário faz login na sua conta
+    2. O usuário navega até a lista de livros atualmente em leitura
+    3. O usuário seleciona o livro que deseja atualizar
+    4. O usuário insere o progresso da leitura (número de páginas lidas).
+    5. O sistema registra a atualização do progresso no banco de dados do usuário e atualiza o status do livro.
 
 2. Acompanhar progressos de leitura em metas de leitura compartilhadas
    - Atores: Usuário e sistema
    - Descrição: Acompanhar os progressos de leitura de outros usuários que participam de uma meta de leitura compartilhada com o usuário em um livro específico.
    - Fluxo Principal:
-     - O usuário faz login na sua conta
-     - O usuário acessa a página da meta de leitura conjunta
-     - O sistema exibe a lista de membros que estão participando da meta de leitura conjunta no livro específico
-     - O usuário pode ver o progresso de leitura de cada membro do grupo para o livro em questão, incluindo o número de páginas lidas ou a porcentagem concluída
-     - O usuário pode acompanhar o progresso dos outros membros do grupo e interagir, como comentar ou encorajar outros membros a atingir a meta
+    1. O usuário faz login na sua conta
+    2. O usuário acessa a página da meta de leitura conjunta
+    3. O sistema exibe a lista de membros que estão participando da meta de leitura conjunta no livro específico
+    4. O usuário pode ver o progresso de leitura de cada membro do grupo para o livro em questão, incluindo o número de páginas lidas ou a porcentagem concluída
+    5. O usuário pode acompanhar o progresso dos outros membros do grupo e interagir, como comentar ou encorajar outros membros a atingir a meta
+
+### Busca
+
+1. Buscar por ISBN ou Escanear Código de Barras
+  - Ator Principal: Usuário
+  - Descrição: O usuário deseja buscar um livro específico pelo seu número ISBN ou escanear o código de barras do livro para encontrar o livro exato no aplicativo e registrar seu progresso.
+  - Fluxo Principal:
+    1. O usuário acessa a função de busca, que permite a busca por ISBN ou o escaneamento do código de barras, com acesso à câmera.
+    2. O usuário insere manualmente o número ISBN do livro ou usa a opção de escanear o código de barras do livro.
+    3. O sistema processa a entrada e localiza o livro correspondente no banco de dados.
+    4. O livro correspondente é exibido com todos os detalhes relevantes, incluindo título, capa, autor e sinopse.
+    5. O usuário pode selecionar o livro encontrado e registrar seu progresso de leitura.
+
+2. Buscar por História ou Palavras-Chave
+  - Ator Principal: Usuário
+  - Descrição: O usuário deseja buscar livros com base na história ou em palavras-chave no aplicativo de compartilhamento de progresso de leituras. Isso permite ao usuário encontrar livros que compartilhem temas ou elementos de história específicos.
+  - Fluxo Principal:
+    1. O usuário acessa a função de pesquisa no aplicativo.
+    2. O usuário insere palavras-chave, frases ou descrições de histórias que deseja encontrar em livros.
+    3. O sistema processa a pesquisa e retorna uma lista de livros que correspondem às palavras-chave ou à descrição da história.
+    4. Os resultados da pesquisa incluem detalhes como título, capa, autor e sinopse.
+    5. O usuário pode clicar em um resultado de pesquisa para acessar mais informações sobre um livro específico e registrar seu progresso de leitura.
+  - Fluxo Alternativo: Se não houver resultados correspondentes, o sistema informa ao usuário que a pesquisa não encontrou livros correspondentes e sugere ajustar os critérios de pesquisa.
+
 
 ## Estórias de usuário
 
@@ -101,6 +150,25 @@ Imaginemos o sistema como uma biblioteca univercitária que tenha salas de estud
     - Como usuário registrado, quero poder fornecer meu endereço de e-mail e senha para fazer login na minha conta.
     - O sistema deve verificar se as informações de login são válidas e corresponde a uma conta registrada no sistema.
     - Após o login bem-sucedido, devo ser redirecionado para a minha página inicial do aplicativo.
+
+### Metas de leitura individuais
+
+1. Excluir meta de leitura individual:
+  - **Descrição:** como um usuário do sistema, desejo excluir uma meta de leitura que não é mais relevante para mim e, por isso, não tenho mais interesse em cumpri-la.
+  - **Critérios de aceitação:**
+    - Eu quero poder excluir metas de leitura que não me interessem mais, de modo que elas não apareçam para mim da mesma forma que outras metas que ainda me interessam.
+    - Eu quero que seja solicitada a minha confirmação antes da exclusão, para que não haja risco de que eu exclua alguma meta de leitura por acidente.
+    - Eu quero que meus progressos de leitura relacionados a essa meta não sejam perdidos, mas sim apenas desassociados dela.
+    - Eu gostaria de ser capaz de recuperar e editar essa meta de leitura caso mude de ideia e deseje retomá-la.
+    - Eu gostaria de poder excluir permanentemente uma meta de leitura já movida para a seção de metas excluídas, impossibilitando sua recuperação no futuro.
+    - Eu gostaria que, antes de excluir permanentemente alguma meta, o sistema peça minha confirmação e avise que não será possível reverter essa ação.
+
+2. Visualizar histórico de metas de leitura:
+  - **Descrição:** como usuário do sistema, desejo ser capaz de visualizar metas de leitura individuais que já estabeleci ao longo do meu uso do sistema e visualizar seu status (em andamento, concluída, excluída).
+  - **Critérios de aceitação:**
+    - Eu quero poder visualizar todo o meu histórico de metas de leituras ao longo do uso do sistema em ordem cronológica decrescente (ou seja, das mais recentes até as mais antigas).
+    - Eu quero poder filtrar as metas de leitura existentes segundo o status, podendo visualizar apenas as que estão em andamento, já concluídas ou que foram excluídas.
+    - Eu gostaria que as metas excluídas estivessem por padrão em uma aba separada, para que não se misturem com as metas não-excluídas, mas que também seja possível listar todas as metas (excluídas ou não) em uma mesma página.
 
 ### Metas de leitura - estendido para multiplas pessoas.
 
@@ -123,13 +191,33 @@ Imaginemos o sistema como uma biblioteca univercitária que tenha salas de estud
 ### Progresso de leitura
 1. Visualizar o progresso de outro usuário:
    - Descrição: como um usuário do sistema, quero poder ver o progresso dos meus amigos para ver o que estão lendo.
-   - Critérios de aceitação:
-     - Quero encontrar o nome de usuário do meu amigo na busca
-     - Quero poder acessar o perfil do meu no sistema depois de encontrá-lo na busca
-     - Quero poder visualizar os progressos de leitura do meu amigo no seu perfil
+   - Critérios de Aceitação:
+    - Quero encontrar o nome de usuário do meu amigo na busca
+    - Quero poder acessar o perfil do meu no sistema depois de encontrá-lo na busca
+    - Quero poder visualizar os progressos de leitura do meu amigo no seu perfil
 
 2. Marcar o progresso como concuído
    - Descrição: como um usuário do sistema, quando eu terminar um livro quero simplismente deixá-lo concluído, sem precisar atualizar o progresso.
-   - Critério de aceitação:
-     - Quero poder selecionar o livro no meu perfil o qual desejo atualizar meu progresso
-     - Quero poder atualizar o progresso para total e marcar o livro como concluído para que conste no meu perfil que eu terminei ele
+   - Critérios de Aceitação:
+    - Quero poder selecionar o livro no meu perfil o qual desejo atualizar meu progresso
+    - Quero poder atualizar o progresso para total e marcar o livro como concluído para que conste no meu perfil que eu terminei ele
+
+### Busca
+
+1. Pesquisa de Livro por Título
+  - Descrição: Como um usuário ávido leitor, desejo poder pesquisar livros pelo título no aplicativo de compartilhamento de progresso de leituras, para que eu possa facilmente encontrar e registrar o progresso de leitura de livros específicos.
+  - Critérios de Aceitação:
+    - No aplicativo, existe uma barra de pesquisa que permite aos usuários inserir o título do livro desejado.
+    - O sistema deve fornecer resultados relevantes que correspondam ao título inserido.
+    - Os resultados da pesquisa devem incluir o título do livro, a capa, o autor e outros detalhes relevantes.
+    - Os resultados da pesquisa devem ser apresentados de forma clara e organizada para facilitar a seleção do livro desejado.
+    - Os usuários podem clicar em um resultado de pesquisa para visualizar detalhes adicionais e registrar seu progresso de leitura nesse livro.
+
+2. Pesquisa de Livro por Autor
+  - Descrição: Como um entusiasta da literatura e fã de certos autores, desejo poder pesquisar livros pelo autor de meu interesse no aplicativo de compartilhamento de progresso de leituras.
+  - Critérios de Aceitação:
+    - No aplicativo, há a de pesquisa, onde é possível que os usuários insiram o nome do autor desejado.
+    - O sistema deve fornecer resultados que correspondam ao autor inserido.
+    - Os resultados da pesquisa por autor devem incluir uma lista de livros escritos por esse autor, juntamente com detalhes como título, capa e outros detalhes relevantes.
+    - Os resultados da pesquisa por autor devem ser apresentados de forma organizada e de fácil leitura.
+    - Os usuários podem clicar em um resultado de pesquisa para visualizar detalhes adicionais e registrar seu progresso de leitura em um livro específico do autor.
