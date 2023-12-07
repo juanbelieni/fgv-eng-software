@@ -2,4 +2,10 @@ db:
 	@touch db/db.sqlite
 	sqlite3 db/db.sqlite < db/create.sql
 
-.PHONY: db
+test:
+	python -m pytest tests/*.py
+
+run:
+	python src/main.py
+
+.PHONY: db test run

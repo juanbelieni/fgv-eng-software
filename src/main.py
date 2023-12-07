@@ -1,25 +1,49 @@
-import PySimpleGUIQt as sg
 
-sg.theme_background_color("#FFF7E7")
+import kivy
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.app import App
+from models import *
 
-layout = [[sg.Text("What's your name?")],
-          [sg.Input()],
-          [sg.Button('Ok')]]
+kivy.require('2.2.1')
 
-window = sg.Window(
-    'Sorvil',
-    layout,
-    font=("Arial", 12),
-)
 
-event, values = window.read()
+class LoginScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super(LoginScreen, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.padding = 10
 
-# print('Hello', values[0], "! Thanks for trying PySimpleGUI")
+        self.username_input = TextInput(hint_text='Username', multiline=False)
+        self.password_input = TextInput(hint_text='Password', multiline=False, password=True)
 
-window.close()
+        self.add_widget(Label(text='Login'))
+        self.add_widget(self.username_input)
+        self.add_widget(self.password_input)
 
-# from models.user import UserRepository
+        login_button = Button(text='Login', on_press=self.login)
+        self.add_widget(login_button)
 
-# user_repository = UserRepository()
+    def login(self, instance):
+        username = self.username_input.text
+        password = self.password_input.text
 
-# print(user_repository.get_user_from_id("123"))
+        # Aqui você pode adicionar lógica para verificar o nome de usuário e senha
+        if sha256(password).hexdigest() == self.db.execute("select password in user where email = ?", (email,)):
+            print('oi')
+            return True
+        else:
+            print('tchal')
+            return False
+
+
+class MyApp(App):
+
+    def build(self):
+        return LoginScreen()
+
+
+if __name__ == '__main__':
+    MyApp().run()
