@@ -1,25 +1,16 @@
-import PySimpleGUIQt as sg
 
-sg.theme_background_color("#FFF7E7")
+import kivy
+from kivy.uix.label import Label
+from kivy.app import App
 
-layout = [[sg.Text("What's your name?")],
-          [sg.Input()],
-          [sg.Button('Ok')]]
+kivy.require('2.2.1')
 
-window = sg.Window(
-    'Sorvil',
-    layout,
-    font=("Arial", 12),
-)
 
-event, values = window.read()
+class MyApp(App):
 
-# print('Hello', values[0], "! Thanks for trying PySimpleGUI")
+    def build(self):
+        return Label(text='Hello world')
 
-window.close()
 
-# from models.user import UserRepository
-
-# user_repository = UserRepository()
-
-# print(user_repository.get_user_from_id("123"))
+if __name__ == '__main__':
+    MyApp().run()

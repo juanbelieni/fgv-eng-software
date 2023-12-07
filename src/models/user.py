@@ -21,7 +21,7 @@ class UserRepository(Repository):
         self.db = db
 
     def create(self, **attrs) -> Optional[User]:
-        id = len(uuid4())
+        id = str(uuid4())
         name = attrs.get("name")
         email = attrs.get("email")
         bio = attrs.get("bio") or ""
@@ -35,18 +35,47 @@ class UserRepository(Repository):
         if result is None or len(result) == 0:
             return None
 
-        return User(
-            id=result[0][0],
-            name=result[0][1],
-            email=result[0][2],
-            bio=result[0][3],
+        return User(*result[0])
+
+    def read(self, id=None, password=None) -> Optional[User]:
+        if id is not None:
+            result = self.db.execute(
+                "select id, name, email, bio in user where id = ?",
+                (id,)
+            )
+        elif password is not None:
+            password = sha256(password.encode("utf-8")).hexdigest()
+            result = self.db.execute(
+                "select id, name, email, bio in user where password = ?",
+                (password,)
+            )
+        else:
+            return None
+
+        if result is None or len(result) == 0:
+            return None
+
+        return User(*result[0])
+
+    def update(self, user: User, **attrs) -> Optional[User]:
+        name = attrs.get("name") or user.name
+        bio = attrs.get("bio") or user.bio
+
+        result = self.db.execute(
+            "update user name = ?, set bio = ? where id = ?",
+            (name, bio, id)
         )
 
-    def read(): ...
+        if result is None or len(result) == 0:
+            return None
 
-    def update(): ...
+        return User(*result[0])
 
-    def delete(): ...
+    def delete(self, user: User):
+        self.db.execute(
+            "delete user where id = ?",
+            (user.id,)
+        )
 
 
 user_repository = UserRepository(db)
