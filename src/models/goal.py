@@ -10,8 +10,9 @@ from hashlib import sha256
 class Goal:
     id: str
     name: str
-    email: str
-    bio: str
+    public: bool
+    book: str
+    password: str
 
 
 class GoalRepository(Repository):
@@ -21,7 +22,7 @@ class GoalRepository(Repository):
         self.db = db
 
     def create(self, **attrs) -> Optional[Goal]:
-        id = len(uuid4())
+        id = str(uuid4())
         name = attrs.get("name")
         public = attrs.get("public")
         book = attrs.get("book")
@@ -35,12 +36,7 @@ class GoalRepository(Repository):
         if result is None or len(result) == 0:
             return None
 
-        return User(
-            id=result[0][0],
-            name=result[0][1],
-            public=result[0][2],
-            book=result[0][3],
-        )
+        return Goal(*result[0])
 
     def read(): ...
 

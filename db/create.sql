@@ -15,7 +15,9 @@ CREATE TABLE goal (
 );
 
 CREATE TABLE progress (
-    user FOREIGN KEY,
-    goal FOREIGN KEY,
-    page INT
+    user TEXT,
+    goal TEXT,
+    page INT,
+    FOREIGN KEY (user) REFERENCES user(id),
+    FOREIGN KEY (goal) REFERENCES goal(id)
 );

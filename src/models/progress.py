@@ -32,7 +32,7 @@ class ProgressRepository(Repository):
         if result is None or len(result) == 0:
             return None
 
-        return User(
+        return Progress(
             user=result[0][0],
             goal=result[0][1],
             page=result[0][2],
