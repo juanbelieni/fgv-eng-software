@@ -1,6 +1,6 @@
 
 import kivy
-from views.auth.signup import SignUpView
+from views.auth.sign_up import SignUpView
 
 kivy.require('2.2.1')
 
