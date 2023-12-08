@@ -45,4 +45,4 @@ class ProgressRepository(Repository):
     def delete(): ...
 
 
-goal_repository = GoalRepository(db)
+progress_repository = ProgressRepository(db)

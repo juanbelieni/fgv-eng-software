@@ -12,7 +12,6 @@ class Goal:
     name: str
     public: bool
     book: str
-    password: str
 
 
 class GoalRepository(Repository):
