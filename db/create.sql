@@ -17,7 +17,8 @@ CREATE TABLE goal (
 CREATE TABLE progress (
     user TEXT NOT NULL,
     goal TEXT NOT NULL,
-    page FLOAT NOT NULL,
+    percent FLOAT NOT NULL,
     FOREIGN KEY (user) REFERENCES user(id),
-    FOREIGN KEY (goal) REFERENCES goal(id)
+    FOREIGN KEY (goal) REFERENCES goal(id),
+    PRIMARY KEY (user, goal)
 );

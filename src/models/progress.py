@@ -2,15 +2,13 @@ from dataclasses import dataclass
 from src.utils.db import db, DB
 from src.utils.repository import Repository
 from typing import Optional
-from uuid import uuid4
-from hashlib import sha256
 
 
 @dataclass
 class Progress:
     user: str
     goal: str
-    page: float
+    percent: float
 
 
 class ProgressRepository(Repository):
@@ -22,26 +20,22 @@ class ProgressRepository(Repository):
     def create(self, **attrs) -> Optional[Progress]:
         user = attrs.get("user")
         goal = attrs.get("goal")
-        page = attrs.get("page")
+        percent = attrs.get("percent")
 
         result = self.db.execute(
-            "insert into progress value (?, ?, ?, ?, ?)",
-            (user, goal, page)
+            "insert into progress value (?, ?, ?)",
+            (user, goal, percent)
         )
 
         if result is None or len(result) == 0:
             return None
 
-        return Progress(
-            user=result[0][0],
-            goal=result[0][1],
-            page=result[0][2],
-        )
+        return Progress(*result[0])
 
-    def read(self, user=None, goal=None) -> Optional[Progress]:
+    def read(self, user:str=None, goal:str=None) -> Optional[Progress]:
         if user is not None and goal is not None:
             result = self.db.execute(
-                "select user, goal, progress_percent, bio in user where (user, goal) = (?, ?)",
+                "select user, goal, percent from progress where user = ? and goal = ?",
                 (user, goal)
             )
         else:
@@ -52,9 +46,26 @@ class ProgressRepository(Repository):
 
         return Progress(*result[0])
 
-    def update(): ...
+    def update(self, **attrs) -> Optional[Progress]:
+        user = attrs.get("user")
+        goal = attrs.get("goal")
+        percent = attrs.get("percent")
 
-    def delete(): ...
+        result = self.db.execute(
+            "update progress set percent = ? where user = ? and goal = ?",
+            (percent, user, goal)
+        )
+
+        if result is None or len(result) == 0:
+            return None
+
+        return Progress(*result[0])
+
+    def delete(self, progress: Progress):
+        self.db.execute(
+            "delete from progress where progress.user = ? and progress.goal = ?",
+            (progress.user, progress.goal,)
+        )
 
 
 progress_repository = ProgressRepository(db)
