@@ -19,7 +19,7 @@ def goal_repository():
     yield test_goal_repository
 
 def test_create_goal(goal_repository):
-    mock_result = [("123", "test_name_goal", 1, "test_name_book", "password123")]
+    mock_result = [("123", "test_name_goal", 1, "test_name_book")]
     goal_repository.db.execute.return_value = mock_result
 
     goal_data = {
@@ -35,17 +35,17 @@ def test_create_goal(goal_repository):
     assert goal_repository.db.execute.called_once
 
 def test_create_goal_failure(goal_repository):
-    attrs = {
+    goal_data = {
         "name": "Test Goal",
-        "public": True,
-        "book": "Sample Book",
+        "public": 1,
+        "book": "",
         "password": "password123"
     }
 
     # Assuming the db.execute() returns None or an empty list for a failed insertion
     goal_repository.db.execute.return_value = None
 
-    created_goal = goal_repository.create(**attrs)
+    created_goal = goal_repository.create(**goal_data)
 
     assert created_goal is None
     assert goal_repository.db.execute.called_once
