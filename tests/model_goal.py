@@ -5,14 +5,6 @@ from src.models.goal import Goal, GoalRepository
 from src.utils.db import DB
 
 @pytest.fixture
-def db_mock():
-    return MagicMock()
-
-@pytest.fixture
-def goal_repository(db_mock):
-    return GoalRepository(db_mock)
-
-@pytest.fixture
 def goal_repository():
     mock_db = Mock(spec=DB)
     test_goal_repository = GoalRepository(mock_db)
@@ -42,13 +34,9 @@ def test_create_goal_failure(goal_repository):
         "password": "password123"
     }
 
-    # Assuming the db.execute() returns None or an empty list for a failed insertion
     goal_repository.db.execute.return_value = None
 
     created_goal = goal_repository.create(**goal_data)
 
     assert created_goal is None
     assert goal_repository.db.execute.called_once
-    # Add more assertions based on your expected behavior for failure
-
-    # Add more tests for read, update, delete methods as needed

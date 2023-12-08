@@ -40,13 +40,8 @@ def test_create_progress_failure(progress_repository):
         "page": "ssdd",
     }
 
-    # Assuming the db.execute() returns None or an empty list for a failed insertion
     progress_repository.db.execute.return_value = None
-
     created_progress = progress_repository.create(**progress_data)
 
     assert created_progress is None
     assert progress_repository.db.execute.called_once
-    # Add more assertions based on your expected behavior for failure
-
-    # Add more tests for read, update, delete methods as needed
