@@ -5,12 +5,22 @@ from typing import Optional
 from uuid import uuid4
 from hashlib import sha256
 
-
+'''
 @dataclass
 class Goal:
     id: str
     name: str
     public: bool
+    book: str
+'''
+
+@dataclass
+class Goal:
+    id: str
+    name: str
+    host: str
+    public: bool
+    hidden: bool
     book: str
 
 
@@ -20,6 +30,7 @@ class GoalRepository(Repository):
     def __init__(self, db: DB):
         self.db = db
 
+    '''
     def create(self, **attrs) -> Optional[Goal]:
         id = str(uuid4())
         name = attrs.get("name")
@@ -30,6 +41,30 @@ class GoalRepository(Repository):
         result = self.db.execute(
             "insert into goal value (?, ?, ?, ?, ?)",
             (id, name, public, book, password)
+        )
+
+        if result is None or len(result) == 0:
+            return None
+
+        return Goal(*result[0])
+    '''
+
+    def create(self, **attrs) -> Optional[Goal]:
+        id = str(uuid4())
+        name = attrs.get("name")
+        host = attrs.get("host")
+        public = attrs.get("public")
+        hidden = attrs.get("hidden")
+        book = attrs.get("book")
+
+        result = self.db.execute(
+            "insert into goal value (?, ?, ?, ?, ?, ?)",
+            (id, name, host, public, hidden, book)
+        )
+
+        self.db.execute(
+            "insert into user_goal valeu (?, ?)",
+            (host, id)
         )
 
         if result is None or len(result) == 0:

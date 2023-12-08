@@ -3,12 +3,11 @@
 import pytest
 from unittest.mock import Mock
 from models.user import User, UserRepository
-from utils.db import DB
 
 
 @pytest.fixture
 def user_repository():
-    mock_db = Mock(spec=DB)
+    mock_db = Mock()
     test_user_repository = UserRepository(mock_db)
     yield test_user_repository
 
@@ -53,6 +52,7 @@ def test_read_user_with_id(user_repository):
 
     assert user is not None
     assert user_repository.db.execute.called_once
+    assert "id = ?" in args[0]
     assert args[1] == ("123",)
 
 
@@ -61,12 +61,11 @@ def test_read_user_with_password(user_repository):
     user_repository.db.execute.return_value = mock_result
 
     user = user_repository.read(password="password")
+    args, _ = user_repository.db.execute.call_args
 
     assert user is not None
     assert user_repository.db.execute.called_once
-
-    args, _ = user_repository.db.execute.call_args
-
+    assert "password = ?" in args[0]
     assert len(args[1][0]) == 64
 
 
