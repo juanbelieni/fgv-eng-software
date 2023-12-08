@@ -3,7 +3,7 @@ import sqlite3
 
 class DB:
     def __init__(self):
-        self.conn = sqlite3.connect("db.sqlite")
+        self.conn = sqlite3.connect("db/db.sqlite")
         self.cursor = self.conn.cursor()
 
     def execute(self, query, params=None):
@@ -21,8 +21,9 @@ class DB:
                 result = self.cursor.fetchall()
                 return result
 
-        except sqlite3.Error:
+        except sqlite3.Error as error:
             # TODO: better this error
+            print(error)
             return None
 
 

@@ -3,7 +3,7 @@ db:
 	sqlite3 db/db.sqlite < db/create.sql
 
 test:
-	python -m pytest tests/*.py
+	python -m pytest --import-mode importlib tests/*.py
 
 run:
 	python src/main.py
