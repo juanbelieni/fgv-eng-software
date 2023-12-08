@@ -1,7 +1,9 @@
+
+
 import pytest
 from unittest.mock import Mock
-from src.models.user import User, UserRepository
-from src.utils.db import DB
+from models.user import User, UserRepository
+from utils.db import DB
 
 
 @pytest.fixture

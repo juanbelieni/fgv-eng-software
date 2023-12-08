@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from src.utils.db import db, DB
-from src.utils.repository import Repository
+from utils.db import db, DB
+from utils.repository import Repository
 from typing import Optional
 from uuid import uuid4
 from hashlib import sha256
@@ -28,7 +28,7 @@ class UserRepository(Repository):
         password = sha256(attrs["password"].encode("utf-8")).hexdigest()
 
         result = self.db.execute(
-            "insert into user value (?, ?, ?, ?, ?)",
+            "insert into user values (?, ?, ?, ?, ?)",
             (id, name, email, bio, password)
         )
 
