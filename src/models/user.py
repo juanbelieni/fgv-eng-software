@@ -28,31 +28,34 @@ class UserRepository(Repository):
         password = sha256(attrs["password"].encode("utf-8")).hexdigest()
 
         result = self.db.execute(
-            "insert into user values (?, ?, ?, ?, ?)",
+            "insert into user values (?,?,?,?,?)",
             (id, name, email, bio, password)
         )
 
-        if result is None or len(result) == 0:
+        if result is None:
             return None
 
-        return User(*result[0])
+        return self.read(id=id)
 
-    def read(self, id=None, password=None) -> Optional[User]:
-        if id is not None:
-            result = self.db.execute(
-                "select id, name, email, bio in user where id = ?",
-                (id,)
-            )
-        elif password is not None:
-            password = sha256(password.encode("utf-8")).hexdigest()
-            result = self.db.execute(
-                "select id, name, email, bio in user where password = ?",
-                (password,)
-            )
-        else:
-            return None
+    def read(self, **attrs) -> Optional[User]:
+        wheres = []
+        params = tuple()
 
-        if result is None or len(result) == 0:
+        for key, value in attrs.items():
+            if key == "password":
+                value = sha256(value.encode("utf-8")).hexdigest()
+
+            wheres.append(f"{key} = ?")
+            params = (*params, value)
+
+        where = " and ".join(wheres)
+
+        result = self.db.execute(
+            f"select id, name, email, bio from user where {where}",
+            params
+        )
+
+        if result is None:
             return None
 
         return User(*result[0])
@@ -62,18 +65,18 @@ class UserRepository(Repository):
         bio = attrs.get("bio") or user.bio
 
         result = self.db.execute(
-            "update user name = ?, set bio = ? where id = ?",
+            "update user name = \"?\", set bio = \"?\" where id = \"?\"",
             (name, bio, id)
         )
 
         if result is None or len(result) == 0:
             return None
 
-        return User(*result[0])
+        return self.read(id=id)
 
     def delete(self, user: User):
         self.db.execute(
-            "delete user where id = ?",
+            "delete user where id = \"?\"",
             (user.id,)
         )
 
