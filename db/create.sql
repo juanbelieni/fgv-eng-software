@@ -6,7 +6,7 @@ CREATE TABLE user (
     password TEXT NOT NULL
 );
 
-'''
+/*
 CREATE TABLE goal (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE goal (
     book TEXT NOT NULL,
     password TEXT 
 );
-'''
+*/
 
 CREATE TABLE goal (
     id TEXT PRIMARY KEY,

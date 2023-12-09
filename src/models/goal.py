@@ -22,6 +22,7 @@ class Goal:
     public: bool
     hidden: bool
     book: str
+    deadline: str
 
 
 class GoalRepository(Repository):
@@ -83,20 +84,23 @@ class GoalRepository(Repository):
         book = attrs.get("book")
         deadline = attrs.get("deadline")
         
-        result = self.db.execute(
+        if name == None:
+            name = "Meta de leitura para " + book
+
+        result_goal = self.db.execute(
             "insert into goal values (?, ?, ?, ?, ?, ?, ?)",
             (id, name, host, public, hidden, book, deadline)
         )
 
-        self.db.execute(
+        if result_goal is None:
+            return None
+        
+        result_user_goal = self.db.execute(
             "insert into user_goal values (?, ?)",
             (host, id)
         )
 
-        if (result is None or len(result) == 0):
-            return None
-
-        return Goal(*result[0])
+        return Goal(*result_goal[0])
 
     def read(): ...
 

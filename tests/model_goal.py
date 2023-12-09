@@ -33,6 +33,7 @@ def test_create_goal(goal_repository):
     mock_result = [(
         "123", "test_name_goal",
         "user123", 1, 0, "test_name_book",
+        "2023-12-31",
         )]
     goal_repository.db.execute.return_value = mock_result
 
@@ -84,6 +85,35 @@ def test_create_goal_failure(goal_repository):
 
     assert created_goal is None
     assert goal_repository.db.execute.called_once
+
+def test_create_goal_no_name(goal_repository):
+    goal_data = {
+        "name": None,
+        "host": "user123",
+        "public": 1,
+        "hidden": 0,
+        "book": "livro",
+        "deadline": "2023-12-31",
+    }
+
+    mock_result = [
+        [(
+        "Meta de leitura para livro", 
+        "test_name_goal", "user123", 1, 0,
+        "livro", "2023-12-31",
+        )],
+        [("user123", "123")],
+    ]
+
+    goal_repository.db.execute.side_effect = mock_result
+    
+    created_goal = goal_repository.create(**goal_data)
+    args, _ = goal_repository.db.execute.call_args_list[0]
+
+    assert created_goal is not None
+    assert args[1][1] == "Meta de leitura para livro"
+    assert goal_repository.db.execute.called_once
+
 
 # TO DO:
 # - tests for default name
