@@ -16,6 +16,18 @@ CREATE TABLE goal (
 );
 */
 
+/*
+CREATE TABLE goal (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    host TEXT NOT NULL,
+    public BIT NOT NULL,
+    hidden BIT NOT NULL,
+    book TEXT NOT NULL,
+    FOREIGN KEY (host) REFERENCES user(id)
+);
+*/
+
 CREATE TABLE goal (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -36,9 +48,10 @@ CREATE TABLE user_goal (
 );
 
 CREATE TABLE progress (
-    user TEXT,
-    goal TEXT,
-    page INT,
+    user TEXT NOT NULL,
+    goal TEXT NOT NULL,
+    percent FLOAT NOT NULL,
     FOREIGN KEY (user) REFERENCES user(id),
-    FOREIGN KEY (goal) REFERENCES goal(id)
+    FOREIGN KEY (goal) REFERENCES goal(id),
+    PRIMARY KEY (user, goal)
 );

@@ -44,8 +44,6 @@ class SignUpCommand(Command):
             bio=bio,
         )
 
-        print("User", user)
-
         if user is not None:
             self.app.root.current = 'log_in'
 

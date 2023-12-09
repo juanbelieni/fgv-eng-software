@@ -86,6 +86,7 @@ def test_create_goal_failure(goal_repository):
     assert created_goal is None
     assert goal_repository.db.execute.called_once
 
+
 def test_create_goal_no_name(goal_repository):
     goal_data = {
         "name": None,
@@ -113,8 +114,3 @@ def test_create_goal_no_name(goal_repository):
     assert created_goal is not None
     assert args[1][1] == "Meta de leitura para livro"
     assert goal_repository.db.execute.called_once
-
-
-# TO DO:
-# - tests for default name
-# - tests for hidden != 1
