@@ -81,14 +81,11 @@ class GoalRepository(Repository):
         hidden = attrs.get("hidden")
         public = attrs.get("public")
         book = attrs.get("book")
-
-        print(name)
-        if name == None:
-            name = "Minha meta de leitura para " + book
-
+        deadline = attrs.get("deadline")
+        
         result = self.db.execute(
-            "insert into goal values (?, ?, ?, ?, ?, ?)",
-            (id, name, host, public, hidden, book)
+            "insert into goal values (?, ?, ?, ?, ?, ?, ?)",
+            (id, name, host, public, hidden, book, deadline)
         )
 
         self.db.execute(
@@ -96,7 +93,7 @@ class GoalRepository(Repository):
             (host, id)
         )
 
-        if result is None or len(result) == 0:
+        if (result is None or len(result) == 0):
             return None
 
         return Goal(*result[0])

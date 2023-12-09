@@ -23,6 +23,7 @@ CREATE TABLE goal (
     public BIT NOT NULL,
     hidden BIT NOT NULL,
     book TEXT NOT NULL,
+    deadline DATE NOT NULL,
     FOREIGN KEY (host) REFERENCES user(id)
 );
 
