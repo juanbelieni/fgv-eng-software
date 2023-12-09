@@ -1,23 +1,25 @@
 
 
 import pytest
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 from models.user import User, UserRepository
 
 
 @pytest.fixture
 def user_repository():
-    mock_db = Mock()
+    mock_db = MagicMock()
     test_user_repository = UserRepository(mock_db)
     yield test_user_repository
 
 
-def test_create_user_succes(user_repository):
-    mock_result = [("123", "test_user", "test_user@example.com", "")]
-    user_repository.db.execute.return_value = mock_result
+def test_create_user_success(user_repository):
+    user_repository.db.execute.side_effect = [
+        [],
+        [("123", "test_user", "test_user@example.com", "")]
+    ]
 
     user_data = {
-        "username": "test_user",
+        "name": "test_user",
         "email": "test_user@example.com",
         "password": "password123",
     }
@@ -29,10 +31,10 @@ def test_create_user_succes(user_repository):
 
 
 def test_create_user_failure(user_repository):
-    user_repository.db.execute.return_value = None
+    user_repository.db.execute.side_effect = [None, []]
 
     user_data = {
-        "username": "",
+        "name": None,
         "email": "test_user@example.com",
         "password": "password123",
     }
@@ -68,6 +70,7 @@ def test_read_user_with_password(user_repository):
     assert "password = ?" in args[0]
     assert len(args[1][0]) == 64
 
+
 def test_read_user_failure_with_none(user_repository):
     user_repository.db.execute.return_value = None
 
@@ -77,9 +80,12 @@ def test_read_user_failure_with_none(user_repository):
     assert user is None
     assert user_repository.db.execute.called_once
 
-def test_update_user(user_repository):
-    mock_result = [("123", "test_user", "test_user@example.com", "new_bio")]
-    user_repository.db.execute.return_value = mock_result
+
+def test_update_user_success(user_repository):
+    user_repository.db.execute.side_effect = [
+        [],
+        [("123", "test_user", "test_user@example.com", "new_bio")]
+    ]
 
     old_user = User(
         id="123",
@@ -96,8 +102,7 @@ def test_update_user(user_repository):
 
 
 def test_delete_user(user_repository):
-    mock_result = []
-    user_repository.db.execute.return_value = mock_result
+    user_repository.db.execute.return_value = []
 
     user = User(
         id="123",
