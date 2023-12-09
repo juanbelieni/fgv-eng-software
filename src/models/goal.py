@@ -49,6 +49,7 @@ class GoalRepository(Repository):
         return Goal(*result[0])
     '''
 
+    '''
     def create(self, **attrs) -> Optional[Goal]:
         id = str(uuid4())
         name = attrs.get("name")
@@ -71,6 +72,34 @@ class GoalRepository(Repository):
             return None
 
         return Goal(*result[0])
+    '''
+
+    def create(self, **attrs) -> Optional[Goal]:
+        id = str(uuid4())
+        name = attrs.get("name")
+        host = attrs.get("host")
+        hidden = attrs.get("hidden")
+        public = attrs.get("public")
+        book = attrs.get("book")
+
+        print(name)
+        if name == None:
+            name = "Minha meta de leitura para " + book
+
+        result = self.db.execute(
+            "insert into goal values (?, ?, ?, ?, ?, ?)",
+            (id, name, host, public, hidden, book)
+        )
+
+        self.db.execute(
+            "insert into user_goal values (?, ?)",
+            (host, id)
+        )
+
+        if result is None or len(result) == 0:
+            return None
+
+        return Goal(*result[0])
 
     def read(): ...
 
@@ -78,5 +107,6 @@ class GoalRepository(Repository):
 
     def delete(): ...
 
+    def add_people(): ...
 
 goal_repository = GoalRepository(db)
