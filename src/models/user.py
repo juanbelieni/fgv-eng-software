@@ -55,7 +55,7 @@ class UserRepository(Repository):
             params
         )
 
-        if result is None:
+        if result is None or result == []:
             return None
 
         return User(*result[0])

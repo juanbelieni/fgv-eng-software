@@ -28,7 +28,7 @@ def test_create_user_succes(user_repository):
     assert user_repository.db.execute.called_once
 
 
-def test_create_user_fail(user_repository):
+def test_create_user_failure(user_repository):
     user_repository.db.execute.return_value = None
 
     user_data = {
@@ -68,6 +68,14 @@ def test_read_user_with_password(user_repository):
     assert "password = ?" in args[0]
     assert len(args[1][0]) == 64
 
+def test_read_user_failure_with_none(user_repository):
+    user_repository.db.execute.return_value = None
+
+    user = user_repository.read(id="123")
+    args, _ = user_repository.db.execute.call_args
+
+    assert user is None
+    assert user_repository.db.execute.called_once
 
 def test_update_user(user_repository):
     mock_result = [("123", "test_user", "test_user@example.com", "new_bio")]

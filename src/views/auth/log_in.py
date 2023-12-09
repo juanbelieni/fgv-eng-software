@@ -1,4 +1,5 @@
 from kivy.uix.screenmanager import Screen
+from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
@@ -6,9 +7,11 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from utils.command import Command
 from models.user import user_repository, UserRepository
+from typing import Optional
 
 
 class LogInCommand(Command):
+    app: App
     user_repository: UserRepository
     name_input: TextInput
     email_input: TextInput
@@ -17,9 +20,11 @@ class LogInCommand(Command):
 
     def __init__(
         self,
+        app: Optional[App] = None,
         user_repository=user_repository,
         **inputs: TextInput
     ):
+        self.app = app or App.get_running_app()
         self.user_repository = user_repository
         self.email_input = inputs['email_input']
         self.password_input = inputs['password_input']
@@ -28,10 +33,14 @@ class LogInCommand(Command):
         email = self.email_input.text
         password = self.password_input.text
 
-        user_repository.read(
+        user = self.user_repository.read(
             email=email,
             password=password,
         )
+
+        if user is not None:
+            self.app.user = user
+            self.app.root.current = "profile"
 
 
 class LogInView(Screen):
@@ -66,7 +75,3 @@ class LogInView(Screen):
         layout.add_widget(log_in_button)
 
         self.add_widget(root)
-
-
-if __name__ == '__main__':
-    LogInView().run()
