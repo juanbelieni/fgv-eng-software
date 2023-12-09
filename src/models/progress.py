@@ -59,6 +59,18 @@ class ProgressRepository(Repository):
         if result is None or len(result) == 0:
             return None
 
+    def read(self, user=None, goal=None) -> Optional[Progress]:
+        if user is not None and goal is not None:
+            result = self.db.execute(
+                "select user, goal, progress_percent, bio in user where (user, goal) = (?, ?)",
+                (user, goal)
+            )
+        else:
+            return None
+
+        if result is None or len(result) == 0:
+            return None
+
         return Progress(*result[0])
 
     def delete(self, progress: Progress):
