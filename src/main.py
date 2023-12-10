@@ -10,7 +10,6 @@ from kivy.uix.label import Label
 from models.user import User
 from typing import Optional
 from utils.notification import notification_observer
-from kivy.uix.button import Button
 
 kivy.require('2.2.1')
 
@@ -18,19 +17,21 @@ kivy.require('2.2.1')
 class RootApp(App):
     user: Optional[User] = None
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super(RootApp, self).__init__(**kwargs)
+
         notification_observer.subscribe("success", lambda message: Popup(
-            title=f"Sucesso: {message}",
-            content=Button(text="Fechar"),
+            title="Sucesso",
+            content=Label(text=message),
             size_hint=(None, None),
-            size=(100, 100)
+            size=(250, 200)
         ).open())
 
         notification_observer.subscribe("failure", lambda message: Popup(
-            title=f"Falha: {message}",
-            content=Button(text="Fechar"),
+            title="Falha",
+            content=Label(text=message),
             size_hint=(None, None),
-            size=(100, 100)
+            size=(250, 200)
         ).open())
 
     def build(self):
@@ -40,13 +41,6 @@ class RootApp(App):
         sm.add_widget(ProfileView(name='profile'))
 
         sm.current = 'log_in'
-
-        popup = Popup(title='Test popup',
-                      content=Label(text='Hello world'),
-                      size_hint=(None, None), size=(400, 400))
-
-        popup.open()
-
         return sm
 
 

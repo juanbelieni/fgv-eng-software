@@ -47,6 +47,8 @@ def test_sign_up_command_failure():
     app_mock = MagicMock()
     app_mock.root.current = "sign_up"
 
+    notification_observer = MagicMock()
+
     user_repository_mock = Mock()
     user_repository_mock.create.return_value = None
 
@@ -63,6 +65,7 @@ def test_sign_up_command_failure():
     command = SignUpCommand(
         app=app_mock,
         user_repository=user_repository_mock,
+        notification_observer=notification_observer,
         name_input=name_input_mock,
         email_input=email_input_mock,
         password_input=password_input_mock,
@@ -71,6 +74,11 @@ def test_sign_up_command_failure():
 
     command.execute()
 
+    assert command.app.root.current == 'sign_up'
+
+    args, _ = notification_observer.notify.call_args
+    assert args[0] == "failure"
+
     assert user_repository_mock.create.called_with(
         name="Joãozinho",
         email="joao@fgv.br",
@@ -78,4 +86,3 @@ def test_sign_up_command_failure():
         bio="",
     )
 
-    assert command.app.root.current == 'sign_up'
