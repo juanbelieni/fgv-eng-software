@@ -34,7 +34,7 @@ class BookRepository(Repository):
             return err
         
 
-    def book_info(query) -> [Book]:
+    def book_info(query) -> list[Book]:
         result = BookRepository.search(query)
         
         books = []
