@@ -40,7 +40,7 @@ class LogInCommand(Command):
 
         if user is not None:
             self.app.user = user
-            self.app.root.current = "profile"
+            self.app.root.current = "home"
 
 
 class LogInView(Screen):

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
-from src.utils.db import db, DB
-from src.utils.repository import Repository
-from typing import Optional
+from utils.db import db, DB
+from utils.repository import Repository
+from typing import Optional, Generator
 from uuid import uuid4
+
+
 
 @dataclass
 class Progress:
@@ -25,19 +27,19 @@ class ProgressRepository(Repository):
         percent = attrs.get("percent")
 
         result = self.db.execute(
-            "insert into progress value (?, ?, ?)",
-            (user, book, percent)
+            "insert into progress values (?, ?, ?, ?)",
+            (id, user, book, percent)
         )
 
         if result is None:
             return None
 
-        return Progress(*result[0])
+        return self.read(id=id)
 
     def read(self, id=None) -> Optional[Progress]:
 
         result = self.db.execute(
-            "select user, book, progress_percent, bio in user where id = ?",
+            "select id, user, book, percent from progress where id = ?",
             (id,)
         )
 
@@ -46,7 +48,22 @@ class ProgressRepository(Repository):
 
         return Progress(*result[0])
 
-    def update(self, id = None, percent = None) -> Optional[Progress]:
+    def list(self, user=None) -> Optional[list[Progress]]:
+        if user is None:
+            return None
+        
+        result = self.db.execute(
+            "select id, user, book, percent from progress where user = ?",
+            (user,)
+        )
+        
+        if result is None:
+            return None
+
+        return [Progress(*line) for line in result]
+
+
+    def update(self, id=None, percent=None) -> Optional[Progress]:
 
         result = self.db.execute(
             "update progress set percent = ? where id = ?",
@@ -58,7 +75,7 @@ class ProgressRepository(Repository):
 
         return self.read(id=id)
 
-    def delete(self, id = None) -> Optional[Progress]:
+    def delete(self, id=None) -> Optional[Progress]:
         self.db.execute(
             "delete from progress where id = ?",
             (id,)

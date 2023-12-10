@@ -25,10 +25,10 @@ CREATE TABLE user_goal (
 );
 
 CREATE TABLE progress (
+    id TEXT NOT NULL,
     user TEXT NOT NULL,
     book TEXT NOT NULL,
     percent FLOAT NOT NULL,
-    id TEXT NOT NULL,
     FOREIGN KEY (user) REFERENCES user(id),
     PRIMARY KEY (id)
 );
