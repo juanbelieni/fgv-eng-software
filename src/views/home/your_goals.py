@@ -12,6 +12,18 @@ from typing import Optional
 
 
 class CreateGoalCommand(Command):
+    """
+    Comando para criar uma nova meta.
+
+    Attributes:
+        app (App): Instância da aplicação Kivy.
+        goal_repository (GoalRepository): Repositório de metas.
+        notification_observer (NotificationObserver): Observador de notificações.
+        name_input (TextInput): Campo de entrada para o nome da meta.
+        book_input (TextInput): Campo de entrada para o nome do livro.
+        deadline_input (TextInput): Campo de entrada para o prazo da meta.
+        host (str): Id do usuário host da meta.
+    """
     app: App
     goal_repository: GoalRepository
     notification_observer: NotificationObserver
@@ -26,6 +38,15 @@ class CreateGoalCommand(Command):
         notification_observer=notification_observer,
         **inputs: TextInput
     ):
+        """
+        Construtor da classe CreateGoalCommand.
+
+        Args:
+            app (App, optional): Instância da aplicação Kivy.
+            goal_repository: Repositório de metas.
+            notification_observer: Observador de notificações.
+            **inputs: Entradas de texto necessárias para o comando.
+        """
         self.app = app or App.get_running_app()
         self.goal_repository = goal_repository
         self.notification_observer = notification_observer
@@ -35,6 +56,16 @@ class CreateGoalCommand(Command):
         self.host = self.app.get_running_app().user
 
     def execute(self, cancel):
+        """
+        Executa o comando para criar uma nova meta.
+
+        Args:
+            cancel (bool): Indica se a ação deve ser cancelada,
+                caso o botão "Cancelar" seja pressionado.
+
+        Returns:
+            None
+        """
         if cancel:
             self.app.root.current = "home"
         else:
@@ -82,6 +113,9 @@ class CreateGoalCommand(Command):
 
 
 class CreateGoalView(Screen):
+    """
+    Tela para criar uma nova meta de leitura.
+    """
     def __init__(self, **kwargs):
         super(CreateGoalView, self).__init__(**kwargs)
 

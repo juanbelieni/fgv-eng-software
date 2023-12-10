@@ -31,6 +31,12 @@ class GoalRepository(Repository):
     db: DB
 
     def __init__(self, db: DB):
+        """
+        Construtor da classe GoalRepository.
+
+        Args:
+            db (DB): Objeto de banco de dados.
+        """
         self.db = db
 
     '''
@@ -78,6 +84,15 @@ class GoalRepository(Repository):
     '''
 
     def create(self, **attrs) -> Optional[Goal]:
+        """
+        Cria uma nova meta (Goal) no banco de dados.
+
+        Args:
+            **attrs: Atributos da meta a ser criada.
+
+        Returns:
+            Optional[Goal]: Instância da meta criada.
+        """
         id = str(uuid4())
         name = attrs.get("name")
         host = attrs.get("host")
@@ -107,6 +122,15 @@ class GoalRepository(Repository):
         return self.read(id=id)
 
     def read(self, **attrs) -> Optional[Goal]:
+        """
+        Recupera uma meta do banco de dados com base nos atributos fornecidos.
+
+        Args:
+            **attrs: Atributos pelos quais a meta será buscada.
+
+        Returns:
+            Optional[Goal]: Instância da meta encontrada ou None se não encontrada.
+        """
         wheres = []
         params = tuple()
 
@@ -126,9 +150,19 @@ class GoalRepository(Repository):
 
         return Goal(*result[0])
 
-    def list(): ...
+    def list(): pass
 
     def update(self, goal: Goal, **attrs) -> Optional[Goal]:
+        """
+        Atualiza os atributos de uma meta no banco de dados.
+
+        Args:
+            goal (Goal): Instância da meta a ser atualizada.
+            **attrs: Atributos a serem atualizados.
+
+        Returns:
+            Optional[Goal]: Instância da meta atualizada.
+        """
         updates = []
         params = tuple()
 
@@ -154,7 +188,13 @@ class GoalRepository(Repository):
         return self.read(id=id)
 
     def change_visibility(self, goal: Goal):
-        # Hide goal or make it visible again.
+        """
+        Altera a visibilidade de uma meta (oculta ou visível) no banco de dados.
+        Uma meta oculta é uma meta excluída não-permanentemente.
+
+        Args:
+            goal (Goal): Instância da meta cuja visibilidade será alterada.
+        """
         if goal.hidden == 0:
             hidden = 1
         else:
@@ -172,12 +212,28 @@ class GoalRepository(Repository):
         return Goal(*result[0])
 
     def delete(self, goal: Goal):
+        """
+        Exclui uma meta no banco de dados.
+
+        Args:
+            goal (Goal): Instância da meta a ser excluída.
+        """
         self.db.execute(
             "delete from goal where id = ?",
             (goal.id,)
         )
 
     def add_member(self, goal: Goal, user: User):
+        """
+        Adiciona um membro a uma meta no banco de dados.
+
+        Args:
+            goal (Goal): Instância da meta.
+            user (User): Instância do usuário a ser adicionado à meta.
+
+        Returns:
+            Any: Resultado da operação (pode ser adaptado conforme necessário).
+        """
         self.db.execute(
             "insert into user_goal values (?, ?)",
             (user.id, goal.id)

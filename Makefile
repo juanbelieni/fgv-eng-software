@@ -9,7 +9,7 @@ run:
 	python src/main.py
 
 coverage:
-	coverage run -m pytest --import-mode importlib tests/*.py
+	coverage run --omit="tests/*.py" -m pytest --import-mode importlib tests/*.py
 	coverage report -m
 
 .PHONY: db test run coverage
