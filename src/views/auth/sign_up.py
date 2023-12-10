@@ -12,6 +12,25 @@ from typing import Optional
 
 
 class SignUpCommand(Command):
+    """
+    Sign up commadn
+
+    Represents a command for signing up a user.
+
+    Attributes:
+    - app (App): The application instance.
+    - user_repository (UserRepository): The repository for user-related operations.
+    - notification_observer (NotificationObserver): The observer for handling notifications.
+    - name_input (TextInput): The input field for the user's name.
+    - email_input (TextInput): The input field for the user's email.
+    - password_input (TextInput): The input field for the user's password.
+    - bio_input (TextInput): The input field for the user's bio.
+
+    Methods:
+    - __init__: Initializes the SignUpCommand with optional parameters and input fields.
+    - execute: Executes the sign-up command, creates a new user, and updates the application state.
+    """
+
     app: App
     user_repository: UserRepository
     notification_observer: NotificationObserver
@@ -27,6 +46,16 @@ class SignUpCommand(Command):
         notification_observer=notification_observer,
         **inputs: TextInput
     ):
+        """
+        Initializes the SignUpCommand.
+
+        Parameters:
+        - app (App, optional): The application instance.
+        - user_repository (UserRepository): The repository for user-related operations.
+        - notification_observer (NotificationObserver): The observer for handling notifications.
+        - **inputs (TextInput): Input fields for name, email, password, and bio.
+        """
+
         self.app = app or App.get_running_app()
         self.user_repository = user_repository
         self.notification_observer = notification_observer
@@ -36,6 +65,13 @@ class SignUpCommand(Command):
         self.bio_input = inputs['bio_input']
 
     def execute(self):
+        """
+        Executes the sign-up command.
+
+        Retrieves user information from input fields, attempts to create a new user,
+        and updates the application state accordingly.
+        """
+
         name = self.name_input.text
         email = self.email_input.text
         password = self.password_input.text
@@ -58,7 +94,26 @@ class SignUpCommand(Command):
 
 
 class SignUpView(Screen):
+    """
+    Sign up view
+
+    Represents a Kivy screen for the sign-up view.
+
+    Methods:
+    - __init__: Initializes the SignUpView with UI elements and a SignUpCommand.
+    """
+
     def __init__(self, **kwargs):
+        """
+        Initializes the SignUpView.
+
+        Creates UI elements such as labels, text inputs, and buttons. Associates a SignUpCommand
+        with name, email, password, and bio input fields.
+
+        Parameters:
+        - **kwargs: Additional keyword arguments for the Kivy screen.
+        """
+
         super(SignUpView, self).__init__(**kwargs)
 
         root = AnchorLayout(anchor_x="center", anchor_y="center")
