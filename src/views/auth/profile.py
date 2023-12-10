@@ -14,6 +14,23 @@ from utils.notification import notification_observer, NotificationObserver
 
 
 class UpdateProfileCommand(Command):
+    """
+    Update profile command
+
+    Represents a command for updating a user's profile.
+
+    Attributes:
+    - app (App): The application instance.
+    - user_repository (UserRepository): The repository for user-related operations.
+    - notification_observer (NotificationObserver): The observer for handling notifications.
+    - name_input (TextInput): The input field for the user's name.
+    - bio_input (TextInput): The input field for the user's bio.
+
+    Methods:
+    - __init__: Initializes the UpdateProfileCommand with optional parameters and input fields.
+    - execute: Executes the profile update command, updates the user's profile, and notifies the user.
+    """
+
     app: App
     user_repository: UserRepository
     notification_observer: NotificationObserver
@@ -27,6 +44,16 @@ class UpdateProfileCommand(Command):
         notification_observer=notification_observer,
         **inputs: TextInput
     ):
+        """
+        Initializes the UpdateProfileCommand.
+
+        Parameters:
+        - app (App, optional): The application instance.
+        - user_repository (UserRepository): The repository for user-related operations.
+        - notification_observer (NotificationObserver): The observer for handling notifications.
+        - **inputs (TextInput): Input fields for name and bio.
+        """
+
         self.app = app or App.get_running_app()
         self.user_repository = user_repository
         self.notification_observer = notification_observer
@@ -34,6 +61,13 @@ class UpdateProfileCommand(Command):
         self.bio_input = inputs['bio_input']
 
     def execute(self):
+        """
+        Executes the profile update command.
+
+        Retrieves user information from input fields, attempts to update the user's profile,
+        and notifies the user of the update result.
+        """
+
         name = self.name_input.text
         bio = self.bio_input.text
 
@@ -54,10 +88,24 @@ class UpdateProfileCommand(Command):
 
 
 class ProfileView(Screen):
-    def __init__(self, **kwargs):
-        super(ProfileView, self).__init__(**kwargs)
+    """
+    Profile view
+
+    Represents a Kivy screen for the user profile view.
+
+    Methods:
+    - on_pre_enter: Handles actions before entering the profile view, such as rendering user information.
+    """
 
     def on_pre_enter(self):
+        """
+        Handles actions before entering the profile view.
+
+        Renders user information, including name, bio, and a profile picture.
+        Associates an UpdateProfileCommand with name and bio input fields.
+
+        """
+
         user: User = App.get_running_app().user
 
         self.clear_widgets()
