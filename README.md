@@ -5,7 +5,7 @@
 - Executar aplicação: `make run`
 - Rodar testes: `make test`
 - Criar banco de dados: `make db`
-
+- Exibir cobertura de teste: `make coverage`
 
 ## Metáfora do sistema
 

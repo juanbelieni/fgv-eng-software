@@ -8,4 +8,8 @@ test:
 run:
 	python src/main.py
 
-.PHONY: db test run
+coverage:
+	coverage run -m pytest --import-mode importlib tests/*.py
+	coverage report -m
+
+.PHONY: db test run coverage
