@@ -55,24 +55,26 @@ class UserRepository(Repository):
             params
         )
 
-        if result is None or result == []:
+        if result is None or len(result) == 0:
             return None
 
         return User(*result[0])
+
+    def list(self): ...
 
     def update(self, user: User, **attrs) -> Optional[User]:
         name = attrs.get("name") or user.name
         bio = attrs.get("bio") or user.bio
 
         result = self.db.execute(
-            "update user name = ?, set bio = ? where id = ?",
-            (name, bio, id)
+            "update user set name = ?, bio = ? where id = ?",
+            (name, bio, user.id)
         )
 
         if result is None:
             return None
 
-        return self.read(id=id)
+        return self.read(id=user.id)
 
     def delete(self, user: User):
         self.db.execute(

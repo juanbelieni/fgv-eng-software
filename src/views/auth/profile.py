@@ -4,8 +4,38 @@ from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import AsyncImage
-from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
 from models.user import User
+from utils.command import Command
+from typing import Optional
+from models.user import user_repository
+
+
+class UpdateProfileCommand(Command):
+    def __init__(
+        self,
+        app: Optional[App] = None,
+        user_repository=user_repository,
+        **inputs: TextInput
+    ):
+        self.app = app or App.get_running_app()
+        self.user_repository = user_repository
+        self.name_input = inputs['name_input']
+        self.bio_input = inputs['bio_input']
+
+    def execute(self):
+        name = self.name_input.text
+        bio = self.bio_input.text
+
+        user = self.user_repository.update(
+            self.app.user,
+            name=name,
+            bio=bio,
+        )
+
+        if user is not None:
+            self.app.user = user
 
 
 class ProfileView(Screen):
@@ -22,7 +52,7 @@ class ProfileView(Screen):
 
         layout = BoxLayout(orientation='vertical',
                            spacing=10, padding=10,
-                           size=(400, 200), size_hint=(None, None))
+                           size=(400, 250), size_hint=(None, None))
         root.add_widget(layout)
 
         picture_layout = AnchorLayout(anchor_x="center")
@@ -32,11 +62,31 @@ class ProfileView(Screen):
         )
         picture_layout.add_widget(picture)
         layout.add_widget(picture_layout)
+        layout.add_widget(BoxLayout(size=(0, 10)))
 
-        name_label = Label(text=user.name, font_size=20)
-        layout.add_widget(name_label)
+        name_input = TextInput(
+            hint_text='Nome',
+            multiline=False,
+            text=user.name
+        )
+        layout.add_widget(name_input)
 
-        bio = user.bio if user.bio != "" else "Esse usuário não possui uma bio."
+        bio_input = TextInput(hint_text='Bio', multiline=True, text=user.bio)
+        layout.add_widget(bio_input)
 
-        bio_label = Label(text=bio, font_size=16)
-        layout.add_widget(bio_label)
+        self.update_profile_command = UpdateProfileCommand(
+            name_input=name_input,
+            bio_input=bio_input,
+        )
+
+        update_profile_button = Button(
+            text='Atualizar',
+            size_hint_y=None,
+            height=44
+        )
+
+        update_profile_button.bind(
+            on_press=lambda _: self.update_profile_command.execute()
+        )
+
+        layout.add_widget(update_profile_button)
