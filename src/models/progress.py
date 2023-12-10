@@ -2,12 +2,13 @@ from dataclasses import dataclass
 from src.utils.db import db, DB
 from src.utils.repository import Repository
 from typing import Optional
-
+from uuid import uuid4
 
 @dataclass
 class Progress:
+    id: str
     user: str
-    goal: str
+    book: str
     percent: float
 
 
@@ -18,65 +19,49 @@ class ProgressRepository(Repository):
         self.db = db
 
     def create(self, **attrs) -> Optional[Progress]:
+        id = str(uuid4())
         user = attrs.get("user")
-        goal = attrs.get("goal")
+        book = attrs.get("book")
         percent = attrs.get("percent")
 
         result = self.db.execute(
             "insert into progress value (?, ?, ?)",
-            (user, goal, percent)
+            (user, book, percent)
         )
 
-        if result is None or len(result) == 0:
+        if result is None:
             return None
 
         return Progress(*result[0])
 
-    def read(self, user:str=None, goal:str=None) -> Optional[Progress]:
-        if user is not None and goal is not None:
-            result = self.db.execute(
-                "select user, goal, percent from progress where user = ? and goal = ?",
-                (user, goal)
-            )
-        else:
-            return None
-
-        if result is None or len(result) == 0:
-            return None
-
-        return Progress(*result[0])
-
-    def update(self, **attrs) -> Optional[Progress]:
-        user = attrs.get("user")
-        goal = attrs.get("goal")
-        percent = attrs.get("percent")
+    def read(self, id=None) -> Optional[Progress]:
 
         result = self.db.execute(
-            "update progress set percent = ? where user = ? and goal = ?",
-            (percent, user, goal)
+            "select user, book, progress_percent, bio in user where id = ?",
+            (id,)
         )
-
-        if result is None or len(result) == 0:
-            return None
-
-    def read(self, user=None, goal=None) -> Optional[Progress]:
-        if user is not None and goal is not None:
-            result = self.db.execute(
-                "select user, goal, progress_percent, bio in user where (user, goal) = (?, ?)",
-                (user, goal)
-            )
-        else:
-            return None
 
         if result is None or len(result) == 0:
             return None
 
         return Progress(*result[0])
 
-    def delete(self, progress: Progress):
+    def update(self, id = None, percent = None) -> Optional[Progress]:
+
+        result = self.db.execute(
+            "update progress set percent = ? where id = ?",
+            (percent, id)
+        )
+
+        if result is None:
+            return None
+
+        return self.read(id=id)
+
+    def delete(self, id = None) -> Optional[Progress]:
         self.db.execute(
-            "delete from progress where progress.user = ? and progress.goal = ?",
-            (progress.user, progress.goal,)
+            "delete from progress where id = ?",
+            (id,)
         )
 
 
