@@ -10,6 +10,7 @@ from utils.buider import BoxLayoutBuilder
 from models.user import user_repository, UserRepository
 from models.progress import progress_repository, ProgressRepository
 from models.user import user_repository, UserRepository, User
+from models.book import BookRepository, Book
 from typing import Optional
 
 
@@ -32,9 +33,9 @@ class CreateProgressesCommand(Command):
         self.book_input = inputs['book_input']
 
     def execute(self):
-        book=self.book_input.text
-        user_id=self.user_id
-        percent=0
+        book = BookRepository().book_info('sla')[0].id
+        user_id = self.user_id
+        percent = 0
 
         progress = self.progress_repository.create(
             user=user_id,
@@ -85,19 +86,19 @@ class CreateProgressView(Screen):
 
         root.add_widget(layout.build())
 
-        book_input = TextInput( text = "Livro", multiline=False)
+        book_input = TextInput(text="Livro", multiline=False)
         layout.add_widget(book_input)
-
 
         self.dropdown_button = Button(text='Selecione uma opção')
         self.dropdown_button.bind(on_release=self.show_options)
 
         self.selected_option_label = Label(text='Nenhuma opção selecionada')
         layout.add_widget(self.selected_option_label)
-        
+
         self.dropdown = DropDown()
 
-        self.options = ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
+        self.options = ['0', '10', '20', '30', '40',
+                        '50', '60', '70', '80', '90', '100']
 
         for option in self.options:
             btn = Button(text=option, size_hint_y=None, height=44)
@@ -105,15 +106,14 @@ class CreateProgressView(Screen):
             self.dropdown.add_widget(btn)
 
         self.new_progress = CreateProgressesCommand(
-            book_input =book_input,
-            percent_input = 0,
-            user_id = user.id,
+            book_input=book_input,
+            percent_input=0,
+            user_id=user.id,
         )
 
-        
         log_in_button = Button(text='Adicionar Progresso',
                                size_hint_y=None, height=44)
-        log_in_button.bind( on_press=lambda x: self.new_progress.execute())
+        log_in_button.bind(on_press=lambda x: self.new_progress.execute())
         layout.add_widget(log_in_button)
 
         self.add_widget(root)

@@ -10,6 +10,7 @@ from utils.buider import BoxLayoutBuilder
 from models.user import user_repository, UserRepository
 from models.progress import progress_repository, ProgressRepository
 from models.user import user_repository, UserRepository, User
+from models.book import BookRepository, Book
 from typing import Optional
 
 
@@ -34,6 +35,7 @@ class YourProgressesCommand(Command):
         elif self.command == 'delete':
             progress_repository.delete(self.id)
             self.app.root.get_screen('your_progresses').on_pre_enter()
+
 
 
 class BoxProgress(BoxLayoutBuilder):
@@ -85,6 +87,7 @@ class YourProgressesView(Screen):
         list_progresses = progress_repository.list(user=user.id)
 
         if list_progresses is not None and len(list_progresses) > 0:
+            book_title = BookRepository().book_info_by_isbn(list_progresses.book)
             for progress in list_progresses:
                 layout.add_widget_progress(book=progress.book,
                                            percent=progress.percent,
