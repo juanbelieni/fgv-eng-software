@@ -4,7 +4,7 @@ from models.book import Book, BookRepository
 
 @pytest.fixture
 def book_repository():
-    mock_response = {
+    mock_success_response = {
         "items": [
             {
                 "volumeInfo": {
@@ -19,14 +19,18 @@ def book_repository():
         ]
     }
 
-    mock_search_response = MagicMock()
-    mock_search_response.json.return_value = mock_response
+    mock_failure_response = {
+        "error": "Not found"
+    }
 
-    mock_search_by_isbn_response = MagicMock()
-    mock_search_by_isbn_response.json.return_value = mock_response
+    mock_search_success = MagicMock()
+    mock_search_success.json.return_value = mock_success_response
+
+    mock_search_failure = MagicMock()
+    mock_search_failure.json.return_value = mock_failure_response
 
     mock_requests = MagicMock()
-    mock_requests.get.side_effect = [mock_search_response, mock_search_by_isbn_response]
+    mock_requests.get.side_effect = [mock_search_success, mock_search_failure]
 
     mock_repository = BookRepository()
     mock_repository.search = MagicMock(side_effect=mock_requests.get)
@@ -37,9 +41,8 @@ def book_repository():
 
 def test_book_info_success(book_repository):
     books = book_repository.book_info("Python")
-    
-    assert books is not None
-    assert len(books) >= 1
+
+    assert len(books) == 1
     assert isinstance(books[0], Book)
     assert books[0].title == "Mock Title"
     assert books[0].authors == ["Author 1", "Author 2"]
@@ -47,10 +50,12 @@ def test_book_info_success(book_repository):
     assert books[0].imageLinks == "image_link"
     assert books[0].pageCount == 200
     assert books[0].isbn == "123456789"
+
+
+def test_book_info_failure(book_repository):
+    books = book_repository.book_info(123)
     
-def test_book_info_by_isbn_failure(book_repository):
-    books = book_repository.book_info("Python")
-    assert books is None
+    assert len(books) == 0
 
 
 def test_book_info_by_isbn_success(book_repository):
@@ -64,7 +69,9 @@ def test_book_info_by_isbn_success(book_repository):
     assert book.imageLinks == "image_link"
     assert book.pageCount == 200
     assert book.isbn == "123456789"
-    
+
+
 def test_book_info_by_isbn_failure(book_repository):
-    book = book_repository.book_info_by_isbn("123456788")
+    book = book_repository.book_info_by_isbn("Invalid ISBN")
+    
     assert book is None

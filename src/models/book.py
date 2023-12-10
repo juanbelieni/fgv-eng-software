@@ -52,10 +52,7 @@ class BookRepository(Repository):
             
             books.append(book)
     
-        if books != []:
-            return books
-        else:
-            return None
+        return books
     
     
     
