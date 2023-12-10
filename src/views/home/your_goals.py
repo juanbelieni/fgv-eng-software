@@ -28,7 +28,7 @@ class CreateGoalCommand(Command):
         self.name_input = inputs['name_input']
         self.book_input = inputs['book_input']
         self.deadline_input = inputs['deadline_input']
-        self.host = "user123" # App.get_running_app().user
+        self.host = self.app.get_running_app().user
 
     def execute(self):
         name = self.name_input.text
