@@ -7,12 +7,14 @@ from kivy.uix.screenmanager import Screen
 from kivy.app import App
 from utils.command import Command
 from models.goal import goal_repository, GoalRepository
+from utils.notification import notification_observer, NotificationObserver
 from typing import Optional
 
 
 class CreateGoalCommand(Command):
     app: App
     goal_repository: GoalRepository
+    notification_observer: NotificationObserver
     name_input: TextInput
     book_input: TextInput
     deadline_input: TextInput
@@ -25,32 +27,57 @@ class CreateGoalCommand(Command):
     ):
         self.app = app or App.get_running_app()
         self.goal_repository = goal_repository
+        self.notification_observer = notification_observer
         self.name_input = inputs['name_input']
         self.book_input = inputs['book_input']
         self.deadline_input = inputs['deadline_input']
         self.host = self.app.get_running_app().user
 
-    def execute(self):
-        name = self.name_input.text
-        book = self.book_input.text
-        deadline = self.deadline_input.text
-        host = self.host
+    def execute(self, cancel):
+        if cancel == True:
+            # change next line to move to home page
+            self.app.root.current = "profile"
+        else:
+            name = self.name_input.text
+            book = self.book_input.text
+            deadline = self.deadline_input.text.strip()
+            host = self.host
 
-        format_deadline = ""
-        for i in deadline.split('/')[::-1]:
-            format_deadline += i+'-'
-        format_deadline = format_deadline.strip('-')
+            if (deadline == None or len(deadline) == 0):
+                format_deadline = None
+            else:
+                format_deadline = ""
+                for i in deadline.split('/')[::-1]:
+                    format_deadline += i+'-'
+                format_deadline = format_deadline.strip('-')
 
-        goal = self.goal_repository.create(
-            name=name,
-            host=host,
-            public=0,
-            book=book,
-            deadline=format_deadline,
-        )
+                if (len(format_deadline) != 10 or
+                        len(format_deadline.split('-')) != 3):
+                    format_deadline = None
+                elif (len(format_deadline.split('-')[0]) != 4 or
+                        len(format_deadline.split('-')[1]) != 2 or
+                        len(format_deadline.split('-')[2]) != 2):
+                    format_deadline = None
 
-        if goal is not None:
-            self.app.root.current = 'create_goal'
+            goal = self.goal_repository.create(
+                name=name,
+                host=host,
+                public=0,
+                book=book,
+                deadline=format_deadline,
+            )
+
+            if goal is not None:
+                # change next line to move to home page
+                self.app.root.current = "profile"
+                self.notification_observer.notify(
+                    "success", "Meta criada com sucesso!"
+                )
+            else:
+                self.app.root.current = "create_goal"
+                self.notification_observer.notify(
+                    "failure", "Algo deu errado!"
+                )
 
 
 class CreateGoalView(Screen):
@@ -95,9 +122,11 @@ class CreateGoalView(Screen):
         )
 
         save_goal_button.bind(
-            on_press=lambda _: self.create_goal_command.execute()
+            on_press=lambda _: self.create_goal_command.execute(cancel=False)
         )
-        cancel_button.bind(on_press=lambda _: ...)
+        cancel_button.bind(
+            on_press=lambda _: self.create_goal_command.execute(cancel=True)
+        )
         layout.add_widget(cancel_button)
         layout.add_widget(save_goal_button)
 

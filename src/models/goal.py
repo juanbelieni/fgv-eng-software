@@ -98,8 +98,12 @@ class GoalRepository(Repository):
             f"select * from goal where id = '{id}'"
         )
 
-
+        '''
         if result_goal is None:
+            return None
+        '''
+
+        if (result_goal is None or len(result_goal) == 0):
             return None
 
         self.db.execute(
