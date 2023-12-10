@@ -46,6 +46,8 @@ class ProgressRepository(Repository):
 
         return Progress(*result[0])
 
+    def list(): pass
+
     def update(self, id = None, percent = None) -> Optional[Progress]:
 
         result = self.db.execute(

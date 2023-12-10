@@ -97,6 +97,7 @@ class GoalRepository(Repository):
             f"select * from goal where id = '{id}'"
         )
 
+
         if result_goal is None:
             return None
         
@@ -127,6 +128,8 @@ class GoalRepository(Repository):
         
         return [Goal(*result[i]) for i in range(len(result))]
 
+    def list(): ...
+      
     def update(self, goal: Goal, **attrs) -> Optional[Goal]:
         updates = []
         params = tuple()

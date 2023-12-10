@@ -9,18 +9,27 @@ from kivy.uix.button import Button
 from models.user import User
 from utils.command import Command
 from typing import Optional
-from models.user import user_repository
+from models.user import user_repository, UserRepository
+from utils.notification import notification_observer, NotificationObserver
 
 
 class UpdateProfileCommand(Command):
+    app: App
+    user_repository: UserRepository
+    notification_observer: NotificationObserver
+    name_input: TextInput
+    bio_input: TextInput
+
     def __init__(
         self,
         app: Optional[App] = None,
         user_repository=user_repository,
+        notification_observer=notification_observer,
         **inputs: TextInput
     ):
         self.app = app or App.get_running_app()
         self.user_repository = user_repository
+        self.notification_observer = notification_observer
         self.name_input = inputs['name_input']
         self.bio_input = inputs['bio_input']
 
@@ -36,6 +45,12 @@ class UpdateProfileCommand(Command):
 
         if user is not None:
             self.app.user = user
+            self.notification_observer.notify("success", "Perfil atualizado")
+        else:
+            self.notification_observer.notify(
+                "failure",
+                "Não foi pessoal atualizar o perfil"
+            )
 
 
 class ProfileView(Screen):
