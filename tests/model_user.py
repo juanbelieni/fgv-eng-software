@@ -25,9 +25,11 @@ def test_create_user_success(user_repository):
     }
 
     new_user = user_repository.create(**user_data)
+    args, _ = user_repository.db.execute.call_args_list[0]
 
     assert new_user is not None
     assert user_repository.db.execute.called_once
+    assert len(args[1][-1]) == 64
 
 
 def test_create_user_failure(user_repository):
@@ -95,10 +97,12 @@ def test_update_user_success(user_repository):
     )
 
     new_user = user_repository.update(old_user, bio="new_bio")
+    args, _ = user_repository.db.execute.call_args_list[0]
 
     assert new_user is not None
     assert new_user.bio == "new_bio"
     assert user_repository.db.execute.called_once
+    assert args[1] == ("test_user", "new_bio", "123")
 
 
 def test_delete_user(user_repository):
