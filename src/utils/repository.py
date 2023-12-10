@@ -9,6 +9,9 @@ class Repository(ABC):
     def read(self): ...
 
     @abstractmethod
+    def list(self): ...
+
+    @abstractmethod
     def update(self): ...
 
     @abstractmethod

@@ -5,7 +5,6 @@ from typing import Optional, Generator
 from uuid import uuid4
 
 
-
 @dataclass
 class Progress:
     id: str
@@ -51,17 +50,16 @@ class ProgressRepository(Repository):
     def list(self, user=None) -> Optional[list[Progress]]:
         if user is None:
             return None
-        
+
         result = self.db.execute(
             "select id, user, book, percent from progress where user = ?",
             (user,)
         )
-        
+
         if result is None:
             return None
 
         return [Progress(*line) for line in result]
-
 
     def update(self, id=None, percent=None) -> Optional[Progress]:
 

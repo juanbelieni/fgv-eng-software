@@ -7,25 +7,27 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from utils.command import Command
 from models.user import user_repository, UserRepository
+from utils.notification import notification_observer, NotificationObserver
 from typing import Optional
 
 
 class LogInCommand(Command):
     app: App
     user_repository: UserRepository
-    name_input: TextInput
+    notification_observer: NotificationObserver
     email_input: TextInput
     password_input: TextInput
-    email_input: TextInput
 
     def __init__(
         self,
         app: Optional[App] = None,
         user_repository=user_repository,
+        notification_observer=notification_observer,
         **inputs: TextInput
     ):
         self.app = app or App.get_running_app()
         self.user_repository = user_repository
+        self.notification_observer = notification_observer
         self.email_input = inputs['email_input']
         self.password_input = inputs['password_input']
 
@@ -41,6 +43,9 @@ class LogInCommand(Command):
         if user is not None:
             self.app.user = user
             self.app.root.current = "home"
+        else:
+            self.notification_observer.notify("failure", "Usuário não encontrado")
+
 
 
 class LogInView(Screen):

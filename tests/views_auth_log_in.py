@@ -33,13 +33,15 @@ def test_log_in_command_success():
     )
 
     assert type(app_mock.user) == User
-    assert app_mock.root.current == "profile"
+    assert app_mock.root.current == "home"
 
 
 def test_log_in_command_failure():
     app_mock = MagicMock()
     app_mock.user = None
     app_mock.root.current = "log_in"
+
+    notification_observer = MagicMock()
 
     user_repository_mock = Mock()
     user_repository_mock.read.return_value = None
@@ -53,16 +55,20 @@ def test_log_in_command_failure():
     command = LogInCommand(
         app=app_mock,
         user_repository=user_repository_mock,
+        notification_observer=notification_observer,
         email_input=email_input_mock,
         password_input=password_input_mock,
     )
 
     command.execute()
 
+    assert app_mock.user is None
+    assert app_mock.root.current == "log_in"
+
+    args, _ = notification_observer.notify.call_args
+    assert args[0] == "failure"
+
     assert user_repository_mock.read.called_with(
         email="joao@fgv.br",
         password="password",
     )
-
-    assert app_mock.user is None
-    assert app_mock.root.current == "log_in"
