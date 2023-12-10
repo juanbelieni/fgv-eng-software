@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from src.utils.db import db, DB
-from src.utils.repository import Repository
-from src.models.user import User
+from utils.db import db, DB
+from utils.repository import Repository
+from models.user import User
 from typing import Optional
 from uuid import uuid4
-from hashlib import sha256
+# from hashlib import sha256
 
 '''
 @dataclass
@@ -14,6 +14,7 @@ class Goal:
     public: bool
     book: str
 '''
+
 
 @dataclass
 class Goal:
@@ -84,7 +85,7 @@ class GoalRepository(Repository):
         public = attrs.get("public")
         book = attrs.get("book")
         deadline = attrs.get("deadline")
-        
+
         if name == None:
             name = "Meta de leitura para " + book
 
@@ -100,7 +101,7 @@ class GoalRepository(Repository):
 
         if result_goal is None:
             return None
-        
+
         self.db.execute(
             "insert into user_goal values (?, ?)",
             (host, id)
@@ -115,7 +116,7 @@ class GoalRepository(Repository):
         for key, value in attrs.items():
             wheres.append(f"{key} = ?")
             params = (*params, value)
-        
+
         where = " and ".join(wheres)
 
         result = self.db.execute(
@@ -125,7 +126,7 @@ class GoalRepository(Repository):
 
         if (result is None or result == []):
             return None
-        
+
         return [Goal(*result[i]) for i in range(len(result))]
 
     def list(): ...
@@ -135,13 +136,13 @@ class GoalRepository(Repository):
         params = tuple()
 
         if (attrs.get("host") != None or
-            attrs.get("book") != None):
+                attrs.get("book") != None):
             return None
 
         for key, value in attrs.items():
             updates.append(f"{key} = ?")
             params = (*params, value)
-        
+
         params = (*params, goal.id)
 
         update = ", ".join(updates)
@@ -163,7 +164,7 @@ class GoalRepository(Repository):
             hidden = 1
         else:
             hidden = 0
-        
+
         self.db.execute(
             f"update goal set hidden = ? where id = ?",
             (hidden, goal.id)
@@ -191,7 +192,10 @@ class GoalRepository(Repository):
             "select * from user_goal where user = ? and goal = ?",
             (user.id, goal.id)
         )
-        
+
         return result
+
+    def list(): ...
+
 
 goal_repository = GoalRepository(db)
