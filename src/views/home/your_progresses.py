@@ -15,6 +15,8 @@ from typing import Optional
 
 
 class YourProgressesCommand(Command):
+    """Comando para navegar entre a tela de criar progresso e excluir progresso."""
+
     app: App
     progress_repository: ProgressRepository
 
@@ -24,11 +26,20 @@ class YourProgressesCommand(Command):
         command: str = 'create',
         id: str = None
     ):
+        """
+        Construtor do comando.
+
+        Parameters:
+        - app (Optional[App]): Instância do aplicativo Kivy.
+        - command (str): Comando a ser executado ('create' ou 'delete').
+        - id (str): ID do progresso a ser excluído.
+        """
         self.app = app or App.get_running_app()
         self.command = command
         self.id = id
 
     def execute(self):
+        """Executa o comando com base no comando especificado."""
 
         if self.command == 'create':
             self.app.root.current = 'create_progress'
@@ -37,10 +48,11 @@ class YourProgressesCommand(Command):
             self.app.root.get_screen('your_progresses').on_pre_enter()
 
 
-
 class BoxProgress(BoxLayoutBuilder):
+    """Builder para criar um layout de progresso."""
 
     def build(self):
+        """Constrói o layout de progresso."""
         self.set_orientation('vertical')
         self.set_spacing(10)
         self.set_padding(10)
@@ -53,6 +65,14 @@ class BoxProgress(BoxLayoutBuilder):
         return self
 
     def add_widget_progress(self, book, percent, id):
+        """
+        Adiciona widgets de progresso ao layout.
+
+        Parameters:
+        - book (str): Título do livro associado ao progresso.
+        - percent (float): Percentual de progresso.
+        - id (str): ID do progresso.
+        """
 
         book_label = Label(text=book, size_hint_y=44, height=20)
         self.add_widget(book_label)
@@ -69,10 +89,19 @@ class BoxProgress(BoxLayoutBuilder):
 
 
 class YourProgressesView(Screen):
+    """Tela para exibir os progressos do usuário."""
+
     def __init__(self, **kwargs):
+        """
+        Construtor da tela de progressos do usuário.
+
+        Parameters:
+        - **kwargs: Argumentos adicionais passados para o construtor da superclasse.
+        """
         super(YourProgressesView, self).__init__(**kwargs)
 
     def on_pre_enter(self):
+        """Método chamado antes de entrar na tela."""
 
         self.clear_widgets()
 
@@ -87,8 +116,8 @@ class YourProgressesView(Screen):
         list_progresses = progress_repository.list(user=user.id)
 
         if list_progresses is not None and len(list_progresses) > 0:
-            book_title = BookRepository().book_info_by_isbn(list_progresses.book)
             for progress in list_progresses:
+                # book_title = BookRepository().book_info_by_isbn(progress.book).title
                 layout.add_widget_progress(book=progress.book,
                                            percent=progress.percent,
                                            id=progress.id)

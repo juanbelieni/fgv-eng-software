@@ -15,6 +15,8 @@ from typing import Optional
 
 
 class CreateProgressesCommand(Command):
+    """Comando para criar um novo progresso e navegar para a tela de progressos do usuário."""
+
     app: App
     progress_repository: ProgressRepository
     book_input: TextInput
@@ -27,15 +29,26 @@ class CreateProgressesCommand(Command):
         progress_repository=progress_repository,
         **inputs: TextInput
     ):
+        """
+        Construtor do comando.
+
+        Parameters:
+        - app (Optional[App]): Instância do aplicativo Kivy.
+        - progress_repository (ProgressRepository): Repositório de progresso.
+        - **inputs: Entradas necessárias para o comando, incluindo 'book_input'.
+        """
         self.app = app or App.get_running_app()
         self.user_id = App.get_running_app().user.id
         self.progress_repository = progress_repository
         self.book_input = inputs['book_input']
 
     def execute(self):
-        book = BookRepository().book_info('sla')[0].id
+        """Executa o comando para criar um novo progresso e navegar para a tela de progressos do usuário."""
+
         user_id = self.user_id
         percent = 0
+        book = self.book_input.text
+        # book = BookRepository().book_info(book)[0].id
 
         progress = self.progress_repository.create(
             user=user_id,
@@ -48,8 +61,11 @@ class CreateProgressesCommand(Command):
 
 
 class BoxCreateProgress(BoxLayoutBuilder):
+    """Builder para criar um layout de criação de progresso."""
 
     def build(self):
+        """Constrói o layout de criação de progresso."""
+
         self.set_orientation('vertical')
         self.set_spacing(10)
         self.set_padding(10)
@@ -64,17 +80,19 @@ class BoxCreateProgress(BoxLayoutBuilder):
 
 
 class CreateProgressView(Screen):
+    """Tela para criar um novo progresso."""
+
     def __init__(self, **kwargs):
+        """
+        Construtor da tela de criação de progresso.
+
+        Parameters:
+        - **kwargs: Argumentos adicionais passados para o construtor da superclasse.
+        """
         super(CreateProgressView, self).__init__(**kwargs)
 
-    def show_options(self, instance):
-        self.dropdown.open(instance)
-
-    def select_option(self, option):
-        self.selected_option_label.text = f'Opção selecionada: {option}'
-        self.dropdown.dismiss()
-
     def on_pre_enter(self):
+        """Método chamado antes de entrar na tela."""
 
         self.clear_widgets()
 
@@ -88,22 +106,6 @@ class CreateProgressView(Screen):
 
         book_input = TextInput(text="Livro", multiline=False)
         layout.add_widget(book_input)
-
-        self.dropdown_button = Button(text='Selecione uma opção')
-        self.dropdown_button.bind(on_release=self.show_options)
-
-        self.selected_option_label = Label(text='Nenhuma opção selecionada')
-        layout.add_widget(self.selected_option_label)
-
-        self.dropdown = DropDown()
-
-        self.options = ['0', '10', '20', '30', '40',
-                        '50', '60', '70', '80', '90', '100']
-
-        for option in self.options:
-            btn = Button(text=option, size_hint_y=None, height=44)
-            btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
-            self.dropdown.add_widget(btn)
 
         self.new_progress = CreateProgressesCommand(
             book_input=book_input,
