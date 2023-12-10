@@ -20,12 +20,20 @@ class YourProgressesCommand(Command):
     def __init__(
         self,
         app: Optional[App] = None,
+        command: str = 'create',
+        id: str = None
     ):
         self.app = app or App.get_running_app()
+        self.command = command
+        self.id = id
 
     def execute(self):
-        print(self.app)
-        self.app.root.current = 'create_progress'
+
+        if self.command == 'create':
+            self.app.root.current = 'create_progress'
+        elif self.command == 'delete':
+            progress_repository.delete(self.id)
+            self.app.root.get_screen('your_progresses').on_pre_enter()
 
 
 class BoxProgress(BoxLayoutBuilder):
@@ -42,14 +50,20 @@ class BoxProgress(BoxLayoutBuilder):
 
         return self
 
-    def add_widget_progress(self, book, percent):
+    def add_widget_progress(self, book, percent, id):
 
-        book_label = Label(text=book, size_hint_y=44, height=None)
+        book_label = Label(text=book, size_hint_y=44, height=20)
         self.add_widget(book_label)
 
         porcent_label = Label(text=str(percent),
-                              size_hint_y=44, height=None)
+                              size_hint_y=44, height=20)
         self.add_widget(porcent_label)
+
+        delete_button = Button(text='Deletar',
+                               size_hint_y=None, height=44)
+        delete_button.bind(
+            on_press=lambda _: YourProgressesCommand(command='delete', id=id).execute())
+        self.add_widget(delete_button)
 
 
 class YourProgressesView(Screen):
@@ -68,23 +82,23 @@ class YourProgressesView(Screen):
 
         root.add_widget(layout.build())
 
-        list_progresses = progress_repository.list("""user = user.id""")
+        list_progresses = progress_repository.list(user=user.id)
 
         if list_progresses is not None and len(list_progresses) > 0:
             for progress in list_progresses:
                 layout.add_widget_progress(book=progress.book,
-                                           percent=progress.percent)
+                                           percent=progress.percent,
+                                           id=progress.id)
 
         else:
             layout.add_widget(
                 Label(text='Você não possui progressos cadastrados'))
-            
 
-        log_in_button = Button(text='Adicionar Progresso',
-                               size_hint_y=None, height=44)
-        log_in_button.bind(
+        new_progress_button = Button(text='Adicionar Progresso',
+                                     size_hint_y=None, height=44)
+        new_progress_button.bind(
             on_press=lambda _: YourProgressesCommand().execute())
-        layout.add_widget(log_in_button)
+        layout.add_widget(new_progress_button)
 
         self.add_widget(root)
 
