@@ -6,7 +6,7 @@ from models.progress import ProgressRepository, Progress
 def test_create_progress_command():
     app_mock = MagicMock()
     app_mock.user = None
-    app_mock.root.current = "log_in"
+    app_mock.root.current = "create_progress"
 
     notification_observer = MagicMock()
 
