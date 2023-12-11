@@ -1,5 +1,12 @@
 # Projeto de Engenharia de Software
 
+## Comandos
+
+- Executar aplicação: `make run`
+- Rodar testes: `make test`
+- Criar banco de dados: `make db`
+
+
 ## Metáfora do sistema
 
 Imaginemos o sistema como uma biblioteca universitária que tenha salas de estudo, individuais e em grupo.
