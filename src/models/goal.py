@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from src.utils.db import db, DB
-from src.utils.repository import Repository
-from src.models.user import User
+from utils.db import db, DB
+from utils.repository import Repository
+from models.user import User
 from typing import Optional
 from uuid import uuid4
-from hashlib import sha256
+# from hashlib import sha256
 
 '''
 @dataclass
@@ -14,6 +14,7 @@ class Goal:
     public: bool
     book: str
 '''
+
 
 @dataclass
 class Goal:
@@ -84,29 +85,26 @@ class GoalRepository(Repository):
         public = attrs.get("public")
         book = attrs.get("book")
         deadline = attrs.get("deadline")
-        
-        if name == None:
+
+        if name is None:
             name = "Meta de leitura para " + book
 
-        self.db.execute(
+        result_goal = self.db.execute(
             "insert into goal values (?, ?, ?, ?, ?, ?, ?)",
             (id, name, host, public, hidden, book, deadline)
         )
-
-        result_goal = self.db.execute(
-            f"select * from goal where id = '{id}'"
-        )
-
-
         if result_goal is None:
             return None
-        
-        self.db.execute(
+
+        result_user_goal = self.db.execute(
             "insert into user_goal values (?, ?)",
             (host, id)
         )
 
-        return Goal(*result_goal[0])
+        if result_user_goal is None:
+            return None
+
+        return self.read(id=id)
 
     def read(self, **attrs) -> Optional[Goal]:
         wheres = []
@@ -115,7 +113,7 @@ class GoalRepository(Repository):
         for key, value in attrs.items():
             wheres.append(f"{key} = ?")
             params = (*params, value)
-        
+
         where = " and ".join(wheres)
 
         result = self.db.execute(
@@ -125,37 +123,35 @@ class GoalRepository(Repository):
 
         if (result is None or result == []):
             return None
-        
-        return [Goal(*result[i]) for i in range(len(result))]
+
+        return Goal(*result[0])
 
     def list(): ...
-      
+
     def update(self, goal: Goal, **attrs) -> Optional[Goal]:
         updates = []
         params = tuple()
 
-        if (attrs.get("host") != None or
-            attrs.get("book") != None):
+        if attrs.get("host") is not None or attrs.get("book") is not None:
             return None
 
         for key, value in attrs.items():
             updates.append(f"{key} = ?")
             params = (*params, value)
-        
+
         params = (*params, goal.id)
 
         update = ", ".join(updates)
 
-        self.db.execute(
+        result = self.db.execute(
             f"update goal set {update} where id = ?",
             params
         )
 
-        result = self.db.execute(
-            f"select * from goal where id = '{goal.id}'"
-        )
+        if result is None:
+            return None
 
-        return Goal(*result[0])
+        return self.read(id=id)
 
     def change_visibility(self, goal: Goal):
         # Hide goal or make it visible again.
@@ -163,7 +159,7 @@ class GoalRepository(Repository):
             hidden = 1
         else:
             hidden = 0
-        
+
         self.db.execute(
             f"update goal set hidden = ? where id = ?",
             (hidden, goal.id)
@@ -191,7 +187,8 @@ class GoalRepository(Repository):
             "select * from user_goal where user = ? and goal = ?",
             (user.id, goal.id)
         )
-        
+
         return result
+
 
 goal_repository = GoalRepository(db)

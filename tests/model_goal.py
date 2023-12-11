@@ -54,12 +54,13 @@ def test_create_goal(goal_repository):
     assert goal_repository.db.execute.called_once
 '''
 
+
 def test_create_goal(goal_repository):
     mock_result = [(
         "123", "test_name_goal",
         "user123", 1, 0, "test_name_book",
         "2023-12-31",
-        )]
+    )]
     goal_repository.db.execute.return_value = mock_result
 
     goal_data = {
@@ -112,6 +113,7 @@ def test_create_goal_failure(goal_repository):
     assert goal_repository.db.execute.called_once
 '''
 
+
 def test_create_goal_failure(goal_repository):
     goal_data = {
         "name": "Test Goal",
@@ -159,6 +161,7 @@ def test_create_goal_no_name(goal_repository):
     assert goal_repository.db.execute.called_once
 '''
 
+
 def test_create_goal_no_name(goal_repository):
     goal_data = {
         "name": None,
@@ -169,21 +172,17 @@ def test_create_goal_no_name(goal_repository):
     }
 
     mock_result = [
+        [],
+        [],
         [(
-        "123", "Meta de leitura para livro", 
-        "user123", 1, 0,
-        "livro", "2023-12-31",
+            "123", "Meta de leitura para livro",
+            "user123", 1, 0,
+            "livro", "2023-12-31",
         )],
-        [(
-        "123", "Meta de leitura para livro", 
-        "user123", 1, 0,
-        "livro", "2023-12-31",
-        )],
-        [("user123", "123")],
     ]
 
     goal_repository.db.execute.side_effect = mock_result
-    
+
     created_goal = goal_repository.create(**goal_data)
     args, _ = goal_repository.db.execute.call_args_list[0]
 
@@ -194,9 +193,9 @@ def test_create_goal_no_name(goal_repository):
 
 def test_read_goal_id(goal_repository):
     mock_result = [(
-        "123", "meta", "user123", 
+        "123", "meta", "user123",
         1, 0, "livro", "2024-01-01",
-        )]
+    )]
     goal_repository.db.execute.return_value = mock_result
 
     goal = goal_repository.read(id="123")
@@ -211,12 +210,12 @@ def test_read_goal_id(goal_repository):
 def test_read_goal_without_id(goal_repository):
     mock_result = [
         (
-        "123", "goal name", "joao123",
-        1, 0, "livro", "2024-01-01"
+            "123", "goal name", "joao123",
+            1, 0, "livro", "2024-01-01"
         ),
         (
-        "345", "goal name", "maria345",
-        1, 0, "outro livro", "2023-12-31",
+            "345", "goal name", "maria345",
+            1, 0, "outro livro", "2023-12-31",
         )
     ]
     goal_repository.db.execute.return_value = mock_result
@@ -232,7 +231,7 @@ def test_read_goal_without_id(goal_repository):
 
 def test_read_goal_failure(goal_repository):
     goal_repository.db.execute.return_value = None
-    goal = goal_repository.read(id = "123")
+    goal = goal_repository.read(id="123")
 
     assert goal is None
     assert goal_repository.db.execute.called_once
@@ -245,13 +244,13 @@ def test_update_one_success(goal_repository):
     ]
 
     old_goal = Goal(
-        id = "123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 0,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=0,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     new_goal = goal_repository.update(old_goal, name="Minha meta")
@@ -271,17 +270,17 @@ def test_update_many_success(goal_repository):
     ]
 
     old_goal = Goal(
-        id = "123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 0,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=0,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     new_goal = goal_repository.update(
-        old_goal, 
+        old_goal,
         name="Minha meta",
         deadline="2024-06-31"
     )
@@ -301,17 +300,17 @@ def test_update_failure(goal_repository):
     goal_repository.db.execute.return_value = None
 
     old_goal = Goal(
-        id = "123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 0,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=0,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     new_goal = goal_repository.update(
-        old_goal, 
+        old_goal,
         book="Novo livro"
     )
 
@@ -326,13 +325,13 @@ def test_change_visibility_hide(goal_repository):
     ]
 
     old_goal = Goal(
-        id = "123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 0,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=0,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     new_goal = goal_repository.change_visibility(old_goal)
@@ -351,13 +350,13 @@ def test_change_visibility_unhide(goal_repository):
     ]
 
     old_goal = Goal(
-        id = "123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 1,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=1,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     new_goal = goal_repository.change_visibility(old_goal)
@@ -373,13 +372,13 @@ def test_delete_success(goal_repository):
     goal_repository.db.execute.return_value = []
 
     goal = Goal(
-        id = "123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 1,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=1,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     goal_repository.delete(goal)
@@ -393,20 +392,20 @@ def test_add_goal_member(goal_repository):
     goal_repository.db.execute.return_value = [("goal123", "user456")]
 
     goal = Goal(
-        id = "goal123",
-        name = "Meta de leitura para O Livro",
-        host = "user123",
-        public = 0,
-        hidden = 1,
-        book = "O Livro",
-        deadline = "2023-12-31"
+        id="goal123",
+        name="Meta de leitura para O Livro",
+        host="user123",
+        public=0,
+        hidden=1,
+        book="O Livro",
+        deadline="2023-12-31"
     )
 
     new_member = User(
-        id = "user456",
-        name = "second_user",
-        email = "second_user@example.com",
-        bio = ""
+        id="user456",
+        name="second_user",
+        email="second_user@example.com",
+        bio=""
     )
 
     result = goal_repository.add_member(goal, new_member)

@@ -12,6 +12,23 @@ from typing import Optional
 
 
 class LogInCommand(Command):
+    """
+    Log in command
+
+    Represents a command for logging in a user.
+
+    Attributes:
+    - app (App): The application instance.
+    - user_repository (UserRepository): The repository for user-related operations.
+    - notification_observer (NotificationObserver): The observer for handling notifications.
+    - email_input (TextInput): The input field for the user's email.
+    - password_input (TextInput): The input field for the user's password.
+
+    Methods:
+    - __init__: Initializes the LogInCommand with optional parameters and input fields.
+    - execute: Executes the login command, validates the user, and updates the application state.
+    """
+
     app: App
     user_repository: UserRepository
     notification_observer: NotificationObserver
@@ -25,6 +42,16 @@ class LogInCommand(Command):
         notification_observer=notification_observer,
         **inputs: TextInput
     ):
+        """
+        Initializes the LogInCommand.
+
+        Parameters:
+        - app (App, optional): The application instance.
+        - user_repository (UserRepository): The repository for user-related operations.
+        - notification_observer (NotificationObserver): The observer for handling notifications.
+        - **inputs (TextInput): Input fields for email and password.
+        """
+
         self.app = app or App.get_running_app()
         self.user_repository = user_repository
         self.notification_observer = notification_observer
@@ -32,6 +59,13 @@ class LogInCommand(Command):
         self.password_input = inputs['password_input']
 
     def execute(self):
+        """
+        Executes the login command.
+
+        Retrieves email and password from input fields, attempts to find the user in the repository,
+        and updates the application state accordingly.
+        """
+
         email = self.email_input.text
         password = self.password_input.text
 
@@ -44,12 +78,32 @@ class LogInCommand(Command):
             self.app.user = user
             self.app.root.current = "home"
         else:
-            self.notification_observer.notify("failure", "Usuário não encontrado")
+            self.notification_observer.notify(
+                "failure", "Usuário não encontrado")
 
 
 
 class LogInView(Screen):
+    """
+    Log in view
+
+    Represents a Kivy screen for the login view.
+
+    Methods:
+    - __init__: Initializes the LogInView with UI elements and a LogInCommand.
+    """
+
     def __init__(self, **kwargs):
+        """
+        Initializes the LogInView.
+
+        Creates UI elements such as labels, text inputs, and buttons. Associates
+        a LogInCommand with email and password input fields.
+
+        Parameters:
+        - **kwargs: Additional keyword arguments for the Kivy screen.
+        """
+
         super(LogInView, self).__init__(**kwargs)
 
         root = AnchorLayout(anchor_x="center", anchor_y="center")

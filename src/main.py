@@ -7,6 +7,7 @@ from views.auth.profile import ProfileView
 from views.home.your_progresses import YourProgressesView
 from views.home.create_progress import CreateProgressView
 from views.home.home import HomeView
+from views.home.your_goals import CreateGoalView
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -47,8 +48,9 @@ class RootApp(App):
         sm.add_widget(ProfileView(name='profile'))
         sm.add_widget(YourProgressesView(name='your_progresses'))
         sm.add_widget(CreateProgressView(name='create_progress'))
+        sm.add_widget(CreateGoalView(name='create_goal'))
 
-        sm.current = 'log_in'
+        sm.current = 'create_goal'
         return sm
 
 
