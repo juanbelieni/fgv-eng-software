@@ -17,8 +17,6 @@ from utils.notification import notification_observer
 
 kivy.require('2.2.1')
 
-from models.user import user_repository, UserRepository
-from models.progress import progress_repository, ProgressRepository
 
 class RootApp(App):
     user: Optional[User] = None
@@ -50,7 +48,7 @@ class RootApp(App):
         sm.add_widget(CreateProgressView(name='create_progress'))
         sm.add_widget(CreateGoalView(name='create_goal'))
 
-        sm.current = 'create_goal'
+        sm.current = 'sign_up'
         return sm
 
 
