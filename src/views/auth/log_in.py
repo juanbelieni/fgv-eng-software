@@ -76,10 +76,11 @@ class LogInCommand(Command):
 
         if user is not None:
             self.app.user = user
-            self.app.root.current = "profile"
+            self.app.root.current = "home"
         else:
             self.notification_observer.notify(
                 "failure", "Usuário não encontrado")
+
 
 
 class LogInView(Screen):

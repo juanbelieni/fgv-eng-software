@@ -33,7 +33,7 @@ def test_log_in_command_success():
     )
 
     assert type(app_mock.user) == User
-    assert app_mock.root.current == "profile"
+    assert app_mock.root.current == "home"
 
 
 def test_log_in_command_failure():
