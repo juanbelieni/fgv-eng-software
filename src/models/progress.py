@@ -60,7 +60,7 @@ class ProgressRepository(Repository):
 
         return self.read(id=id)
 
-    def delete(self, id = None) -> Optional[Progress]:
+    def delete(self, id=None) -> Optional[Progress]:
         self.db.execute(
             "delete from progress where id = ?",
             (id,)

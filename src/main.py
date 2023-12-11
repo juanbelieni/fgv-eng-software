@@ -4,6 +4,7 @@ from kivy.app import App
 from views.auth.log_in import LogInView
 from views.auth.sign_up import SignUpView
 from views.auth.profile import ProfileView
+from views.home.your_goals import CreateGoalView
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -39,8 +40,9 @@ class RootApp(App):
         sm.add_widget(SignUpView(name='sign_up'))
         sm.add_widget(LogInView(name='log_in'))
         sm.add_widget(ProfileView(name='profile'))
+        sm.add_widget(CreateGoalView(name='create_goal'))
 
-        sm.current = 'log_in'
+        sm.current = 'create_goal'
         return sm
 
 
