@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from models.book import Book, BookRepository
+import requests
 
 @pytest.fixture
 def book_repository():
@@ -99,3 +100,45 @@ def test_book_info_by_isbn_failure(book_repository, monkeypatch):
     book = book_repository.book_info_by_isbn("Invalid ISBN")
     
     assert book is None
+    
+@pytest.fixture
+def book_repository2():
+    mock_repository = BookRepository()
+    return mock_repository
+    
+def test_search_success(book_repository2, monkeypatch):
+    # Mocking requests.get
+    mock_get = MagicMock(return_value=MagicMock(json=lambda: {
+        "items": [
+            {
+                "volumeInfo": {
+                    "title": "Mock Title",
+                    "authors": ["Author 1", "Author 2"],
+                    "id": "123",
+                    "imageLinks": {"thumbnail": "image_link"},
+                    "pageCount": 200,
+                    "industryIdentifiers": [{"type": "ISBN_13", "identifier": "123456789"}]
+                }
+            }
+        ]
+    }))
+    monkeypatch.setattr(requests, 'get', mock_get)
+
+    # Calling the search method
+    result = book_repository2.search("Python")
+
+    assert isinstance(result, dict)
+    assert "items" in result
+    assert len(result["items"]) == 1
+    assert result["items"][0]["volumeInfo"]["title"] == "Mock Title"
+
+def test_search_failure(book_repository2, monkeypatch):
+    # Mocking requests.get to raise an exception
+    mock_get = MagicMock(side_effect=requests.exceptions.RequestException("Mocked Error"))
+    monkeypatch.setattr(requests, 'get', mock_get)
+
+    # Calling the search method
+    result = book_repository2.search("Invalid Query")
+
+    assert isinstance(result, requests.exceptions.RequestException)
+    assert str(result) == "Mocked Error"
