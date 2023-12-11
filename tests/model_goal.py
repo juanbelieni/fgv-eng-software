@@ -172,17 +172,13 @@ def test_create_goal_no_name(goal_repository):
     }
 
     mock_result = [
+        [],
+        [],
         [(
             "123", "Meta de leitura para livro",
             "user123", 1, 0,
             "livro", "2023-12-31",
         )],
-        [(
-            "123", "Meta de leitura para livro",
-            "user123", 1, 0,
-            "livro", "2023-12-31",
-        )],
-        [("user123", "123")],
     ]
 
     goal_repository.db.execute.side_effect = mock_result

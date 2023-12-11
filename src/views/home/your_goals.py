@@ -23,6 +23,7 @@ class CreateGoalCommand(Command):
         self,
         app: Optional[App] = None,
         goal_repository=goal_repository,
+        notification_observer=notification_observer,
         **inputs: TextInput
     ):
         self.app = app or App.get_running_app()
@@ -34,16 +35,15 @@ class CreateGoalCommand(Command):
         self.host = self.app.get_running_app().user
 
     def execute(self, cancel):
-        if cancel == True:
-            # change next line to move to home page
-            self.app.root.current = "profile"
+        if cancel:
+            self.app.root.current = "home"
         else:
             name = self.name_input.text
             book = self.book_input.text
             deadline = self.deadline_input.text.strip()
             host = self.host
 
-            if (deadline == None or len(deadline) == 0):
+            if (deadline is None or len(deadline) == 0):
                 format_deadline = None
             else:
                 format_deadline = ""
@@ -67,9 +67,10 @@ class CreateGoalCommand(Command):
                 deadline=format_deadline,
             )
 
+            print("GOAL", goal)
+
             if goal is not None:
-                # change next line to move to home page
-                self.app.root.current = "profile"
+                self.app.root.current = "home"
                 self.notification_observer.notify(
                     "success", "Meta criada com sucesso!"
                 )

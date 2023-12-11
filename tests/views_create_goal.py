@@ -54,8 +54,9 @@ def test_create_goal_command_success():
     args, _ = notification_observer.notify.call_args
 
     assert type(app_mock.user) == User
-    assert command.app.root.current == "profile"  # change for home page
+    assert command.app.root.current == "home"
     assert args[0] == "success"
+
 
 def test_create_goal_command_failure():
     app_mock = MagicMock()
@@ -65,7 +66,7 @@ def test_create_goal_command_failure():
     notification_observer = MagicMock()
 
     goal_repository_mock = Mock()
-    goal_repository_mock.read.return_value = None
+    goal_repository_mock.create.return_value = None
 
     name_input_mock = Mock()
     book_input_mock = Mock()
@@ -87,7 +88,7 @@ def test_create_goal_command_failure():
     command.execute(cancel=False)
     args, _ = notification_observer.notify.call_args
 
-    assert app_mock.root.current == "profile"  # change for home page
+    assert app_mock.root.current == "create_goal"
     assert args[0] == "failure"
 
     assert goal_repository_mock.create.called_with(
