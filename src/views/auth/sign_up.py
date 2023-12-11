@@ -7,12 +7,14 @@ from kivy.uix.screenmanager import Screen
 from kivy.app import App
 from utils.command import Command
 from models.user import user_repository, UserRepository
+from utils.notification import notification_observer, NotificationObserver
 from typing import Optional
 
 
 class SignUpCommand(Command):
     app: App
     user_repository: UserRepository
+    notification_observer: NotificationObserver
     name_input: TextInput
     email_input: TextInput
     password_input: TextInput
@@ -22,10 +24,12 @@ class SignUpCommand(Command):
         self,
         app: Optional[App] = None,
         user_repository=user_repository,
+        notification_observer=notification_observer,
         **inputs: TextInput
     ):
         self.app = app or App.get_running_app()
         self.user_repository = user_repository
+        self.notification_observer = notification_observer
         self.name_input = inputs['name_input']
         self.email_input = inputs['email_input']
         self.password_input = inputs['password_input']
@@ -46,6 +50,11 @@ class SignUpCommand(Command):
 
         if user is not None:
             self.app.root.current = 'log_in'
+        else:
+            self.notification_observer.notify(
+                "failure",
+                "Não foi pessoal criar a conta"
+            )
 
 
 class SignUpView(Screen):

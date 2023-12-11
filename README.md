@@ -190,14 +190,14 @@ Imaginemos o sistema como uma biblioteca universitária que tenha salas de estud
 
 ### Progresso de leitura
 1. Visualizar o progresso de outro usuário:
-   - **Descrição:** como um usuário do sistema, quero poder ver o progresso dos meus amigos para ver o que estão lendo.
+   - **Descrição:** Como um usuário do sistema, quero poder ver o progresso dos meus amigos para ver o que estão lendo.
    - **Critérios de Aceitação:**
     - Quero encontrar o nome de usuário do meu amigo na busca
     - Quero poder acessar o perfil do meu no sistema depois de encontrá-lo na busca
     - Quero poder visualizar os progressos de leitura do meu amigo no seu perfil
 
 2. Marcar o progresso como concuído
-   - **Descrição:** como um usuário do sistema, quando eu terminar um livro quero simplismente deixá-lo concluído, sem precisar atualizar o progresso.
+   - **Descrição:** Como um usuário do sistema, quando eu terminar um livro quero simplismente deixá-lo concluído, sem precisar atualizar o progresso.
    - **Critérios de Aceitação:**
     - Quero poder selecionar o livro no meu perfil o qual desejo atualizar meu progresso
     - Quero poder atualizar o progresso para total e marcar o livro como concluído para que conste no meu perfil que eu terminei ele
@@ -205,19 +205,14 @@ Imaginemos o sistema como uma biblioteca universitária que tenha salas de estud
 ### Busca
 
 1. Pesquisa de Livro por Título
-- **Descrição:** Como um usuário ávido leitor, desejo poder pesquisar livros pelo título no aplicativo de compartilhamento de progresso de leituras, para que eu possa facilmente encontrar e registrar o progresso de leitura de livros específicos.
+- **Descrição:** Como um usuário do sistema, desejo poder pesquisar livros pelo título no aplicativo de compartilhamento de progresso de leituras, para que eu possa facilmente encontrar e registrar o progresso de leitura de livros específicos.
 - **Critérios de Aceitação:**
-  - No aplicativo, existe uma barra de pesquisa que permite aos usuários inserir o título do livro desejado.
-  - O sistema deve fornecer resultados relevantes que correspondam ao título inserido.
-  - Os resultados da pesquisa devem incluir o título do livro, a capa, o autor e outros detalhes relevantes.
-  - Os resultados da pesquisa devem ser apresentados de forma clara e organizada para facilitar a seleção do livro desejado.
-  - Os usuários podem clicar em um resultado de pesquisa para visualizar detalhes adicionais e registrar seu progresso de leitura nesse livro.
+  - Quero poder procurar um livro no aplicativo
+  - Quero encontrar várias opções de livros com base na minha pesquisa para poder escolher o livro que eu estou procurando.
+  - Quero poder visualizar mais detalhos do livro além do seu título para ver se é o livro que estou procurando.
 
-2. Pesquisa de Livro por Autor
-- **Descrição:** Como um entusiasta da literatura e fã de certos autores, desejo poder pesquisar livros pelo autor de meu interesse no aplicativo de compartilhamento de progresso de leituras.
+2. Pesquisa de Livro por Código ISBN
+- **Descrição:** Tenho meus livros em casa e gostaria de adicioná-los ao meu progresso de leitura no aplicativo, não quero adicionar outro livro por engano, então quero pesquisar pelo código ISBN do meu livro para saber que vou adicionar exatamente o livro que desejo.
 - **Critérios de Aceitação:**
-  - No aplicativo, há a de pesquisa, onde é possível que os usuários insiram o nome do autor desejado.
-  - O sistema deve fornecer resultados que correspondam ao autor inserido.
-  - Os resultados da pesquisa por autor devem incluir uma lista de livros escritos por esse autor, juntamente com detalhes como título, capa e outros detalhes relevantes.
-  - Os resultados da pesquisa por autor devem ser apresentados de forma organizada e de fácil leitura.
-  - Os usuários podem clicar em um resultado de pesquisa para visualizar detalhes adicionais e registrar seu progresso de leitura em um livro específico do autor.
+  - Quero encontrar um livro específico pelo código do ISBN.
+  - Quero visualizar os detalhes do meu livro para poder registrar meu progressor de leitura.

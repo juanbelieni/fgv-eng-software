@@ -6,6 +6,17 @@ CREATE TABLE user (
     password TEXT NOT NULL
 );
 
+/*
+CREATE TABLE goal (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    public BIT NOT NULL,
+    book TEXT NOT NULL,
+    password TEXT 
+);
+*/
+
+/*
 CREATE TABLE goal (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -13,6 +24,18 @@ CREATE TABLE goal (
     public BIT NOT NULL,
     hidden BIT NOT NULL,
     book TEXT NOT NULL,
+    FOREIGN KEY (host) REFERENCES user(id)
+);
+*/
+
+CREATE TABLE goal (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    host TEXT NOT NULL,
+    public BIT NOT NULL,
+    hidden BIT NOT NULL,
+    book TEXT NOT NULL,
+    deadline DATE NOT NULL,
     FOREIGN KEY (host) REFERENCES user(id)
 );
 
@@ -26,9 +49,9 @@ CREATE TABLE user_goal (
 
 CREATE TABLE progress (
     user TEXT NOT NULL,
-    goal TEXT NOT NULL,
+    book TEXT NOT NULL,
     percent FLOAT NOT NULL,
+    id TEXT NOT NULL,
     FOREIGN KEY (user) REFERENCES user(id),
-    FOREIGN KEY (goal) REFERENCES goal(id),
-    PRIMARY KEY (user, goal)
+    PRIMARY KEY (id)
 );
