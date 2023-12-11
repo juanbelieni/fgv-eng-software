@@ -7,12 +7,20 @@ from src.utils.db import DB
 
 @pytest.fixture
 def progress_repository():
+    """
+    Fixture para fornecer uma instância de ProgressRepository para os testes.
+    Retorna uma instância de ProgressRepository com um banco de dados fictício.
+    """
     mock_db = MagicMock()
     test_progress_repository = ProgressRepository(mock_db)
     yield test_progress_repository
 
 
 def test_create_progress(progress_repository):
+    """
+    Testa a função create do ProgressRepository.
+    Verifica se a criação de um progresso é bem-sucedida.
+    """
     mock_result = [("123", "123", "123", 1)]
     progress_repository.db.execute.return_value = mock_result
 
@@ -30,6 +38,10 @@ def test_create_progress(progress_repository):
 
 
 def test_create_progress_failure(progress_repository):
+    """
+    Testa a função create do ProgressRepository.
+    Verifica se a criação de um progresso com falha é tratada corretamente.
+    """
     progress_data = {
         "id": "",
         "user": "845",
@@ -46,6 +58,10 @@ def test_create_progress_failure(progress_repository):
 
 
 def test_read_progress(progress_repository):
+    """
+    Testa a função read do ProgressRepository.
+    Verifica se a leitura de um progresso é bem-sucedida.
+    """
     mock_result = [("123", "123", "123", 1)]
     progress_repository.db.execute.return_value = mock_result
 
@@ -58,6 +74,10 @@ def test_read_progress(progress_repository):
 
 
 def test_read_progress_failure(progress_repository):
+    """
+    Testa a função read do ProgressRepository.
+    Verifica se a leitura de um progresso inexistente é tratada corretamente.
+    """
     progress_repository.db.execute.return_value = None
 
     progress = progress_repository.read(id="123")
@@ -67,6 +87,10 @@ def test_read_progress_failure(progress_repository):
 
 
 def test_list_progress(progress_repository):
+    """
+    Testa a função list do ProgressRepository.
+    Verifica se a listagem de progressos associados a um usuário é bem-sucedida.
+    """
     mock_result = [("123", "123", "123", 1), ("256", "123", "258", 1)]
     progress_repository.db.execute.return_value = mock_result
 
@@ -81,6 +105,10 @@ def test_list_progress(progress_repository):
 
 
 def test_list_progress_failure(progress_repository):
+    """
+    Testa a função list do ProgressRepository.
+    Verifica se a listagem de progressos falha corretamente quando nenhum usuário é fornecido.
+    """
     progress_repository.db.execute.return_value = None
 
     progresses = progress_repository.list()
@@ -90,6 +118,10 @@ def test_list_progress_failure(progress_repository):
 
 
 def test_update_progress(progress_repository):
+    """
+    Testa a função update do ProgressRepository.
+    Verifica se a atualização de um progresso é bem-sucedida.
+    """
     mock_result = [("123", "123", "123", 1)]
     progress_repository.db.execute.return_value = mock_result
 
@@ -101,6 +133,10 @@ def test_update_progress(progress_repository):
 
 
 def test_update_progress_failure(progress_repository):
+    """
+    Testa a função update do ProgressRepository.
+    Verifica se a atualização de um progresso com falha é tratada corretamente.
+    """
 
     progress_repository.db.execute.return_value = None
 
@@ -111,6 +147,10 @@ def test_update_progress_failure(progress_repository):
 
 
 def test_delete_progress(progress_repository):
+    """
+    Testa a função delete do ProgressRepository.
+    Verifica se a exclusão de um progresso é bem-sucedida.
+    """
     mock_result = [("123" "123", "123", 1)]
     progress_repository.db.execute.return_value = mock_result
 
