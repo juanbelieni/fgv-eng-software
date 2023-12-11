@@ -1,4 +1,3 @@
-from src.utils.repository import Repository
 import requests
 
 class Book():
@@ -10,14 +9,15 @@ class Book():
     isbn: int
 
 
-class BookRepository(Repository):
+class BookRepository():
+    def __init__(self):
+        self.chave_api = 'AIzaSyCgdWN2DzIQxQCIddJ8gHBIaEIyx8eDSi8'
 
-    def search(query, 
-                chave_api = 'AIzaSyCgdWN2DzIQxQCIddJ8gHBIaEIyx8eDSi8'):
+    def search(self, query):
         url = "https://www.googleapis.com/books/v1/volumes"
         params = {
             "q": query,
-            "key": chave_api,
+            "key": self.chave_api,
         }
 
         try:
@@ -34,8 +34,8 @@ class BookRepository(Repository):
             return err
         
 
-    def book_info(query) -> [Book]:
-        result = BookRepository.search(query)
+    def book_info(self, query) -> [Book]:
+        result = self.search(query)
         
         books = []
     
@@ -45,7 +45,7 @@ class BookRepository(Repository):
             
             book.title = volume_info.get('title', 'N/A')
             book.authors = volume_info.get('authors', [])
-            book.id = item.get('id', 'N/A')
+            book.id = volume_info.get('id', 'N/A')
             book.imageLinks = volume_info['imageLinks']['thumbnail'] if 'imageLinks' in volume_info else 'N/A'
             book.pageCount = volume_info.get('pageCount', 'N/A')
             book.isbn = volume_info.get('industryIdentifiers', [{'type': 'ISBN_13', 'identifier': 'N/A'}])[0]['identifier']
@@ -56,12 +56,11 @@ class BookRepository(Repository):
     
     
     
-    def search_by_isbn(isbn,
-                       chave_api='AIzaSyCgdWN2DzIQxQCIddJ8gHBIaEIyx8eDSi8'):
+    def search_by_isbn(self, isbn):
         url = "https://www.googleapis.com/books/v1/volumes"
         params = {
             "q": f"isbn:{isbn}",
-            "key": chave_api,
+            "key": self.chave_api,
         }
     
         try:
@@ -77,8 +76,8 @@ class BookRepository(Repository):
         except requests.exceptions.RequestException as err:
             return err
         
-    def book_info_by_isbn(isbn) -> Book:
-        result = BookRepository.search_by_isbn(isbn)
+    def book_info_by_isbn(self, isbn) -> Book:
+        result = self.search_by_isbn(isbn)
     
         if isinstance(result, dict) and 'items' in result and len(result['items']) > 0:
             book = Book()
@@ -86,7 +85,7 @@ class BookRepository(Repository):
     
             book.title = volume_info.get('title', 'N/A')
             book.authors = volume_info.get('authors', [])
-            book.id = result['items'][0]['id']
+            book.id = volume_info.get('id', 'N/A')
             book.imageLinks = volume_info['imageLinks']['thumbnail'] if 'imageLinks' in volume_info else 'N/A'
             book.pageCount = volume_info.get('pageCount', 'N/A')
             book.isbn = volume_info.get('industryIdentifiers', [{'type': 'ISBN_13', 'identifier': 'N/A'}])[0]['identifier']
